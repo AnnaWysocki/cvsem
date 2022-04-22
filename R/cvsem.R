@@ -11,9 +11,11 @@
 #' @export
 #'
 #' @examples
-#' cvsem(data, list(x, y, z), k = 5)
+#' data <- c(1, 2, 3)
+#' Models <- "xx"
+#' cvsem(x = data, Models = Models)
 
-cvsem <- function(){
+cvsem <- function(x, Models, k = 5){
   print("Place holder for cv function")
 }
 
