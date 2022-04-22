@@ -2,11 +2,10 @@ Package: cvsem
 Title: SEM Model Comparison with K-Fold Cross-Validation
 Version: 0.0.0.9000
 Authors@R: 
-    person("Anna", "Wysocki", , "awysocki@ucdavis.edu", role = c("aut", "cre"))
+    c(person("Anna", "Wysocki", , "awysocki@ucdavis.edu", role = c("aut", "cre"))
     person("Danielle", "Siegel", , "dpsiegel@ucdavis.edu", role = c("aut", "cre"))
     person("Cameron", "allen", , "camallen@ucdavis.edu", role = c("aut", "cre"))
-    person("Philippe", "Rast", , "prast@ucdavis.edu", role = c("aut", "cre"))
-
+    person("Philippe", "Rast", , "prast@ucdavis.edu", role = c("aut", "cre")))
 Description: Functions that allow for comparing SEM models using cross-validation.
 License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a
     license
