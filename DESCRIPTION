@@ -12,7 +12,12 @@ Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
 Imports: 
+<<<<<<< HEAD
     lavaan
 Suggests: 
     testthat (>= 3.0.0)
 Config/testthat/edition: 3
+=======
+    lavaan,
+    stats
+>>>>>>> c9295e7681ed7e97440fd3d0ff6cc31eac4940c9
