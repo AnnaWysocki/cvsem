@@ -1,6 +1,3 @@
-
-
-
 #' Do model comparison on SEM models using cross-validation
 #'
 #' @param x Data
