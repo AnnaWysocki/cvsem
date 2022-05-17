@@ -1,4 +1,4 @@
-createFolds <- function(data, k = 5){
+createFolds <- function(data, k){
 
   s <- nrow(data)/k
 

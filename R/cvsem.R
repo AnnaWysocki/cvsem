@@ -33,7 +33,7 @@ cvsem <- function(x, Models, k = 5){
   model_cv <- data.frame(Model = rep(0, model_number),
                          Cross_Validation = rep(0, model_number))
 
-  folds <- createFolds(x)
+  folds <- createFolds(x, k = k)
 
   if(is.null(names(Models)) != TRUE){
 
