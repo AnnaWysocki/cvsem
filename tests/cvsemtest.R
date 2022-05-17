@@ -1,6 +1,5 @@
-## load functions
-source(file = "../R/cvsem.R" )
-source(file = "../R/createFolds.R" )
+## load all R functions
+devtools::load_all()
 
 ## Example form cvsem main function
 example_data <- lavaan::HolzingerSwineford1939
