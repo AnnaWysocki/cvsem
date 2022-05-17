@@ -43,7 +43,7 @@ cvsem <- function(x, Models, k = 5){
 
     model_names <- paste0("Model_", seq( 1: model_number))}
 
-  for(j in 1: model_number){
+  for(j in seq_len(model_number) ){
 
     model <- Models[[j]]
     cv_index <- NULL
@@ -62,8 +62,12 @@ cvsem <- function(x, Models, k = 5){
 
       test_S <- stats::cov(folds[[i]]$test[, colnames(lavaan::inspect(model_results, what = "data"))])
 
-      cv_matrix <- log(implied_sigma) - log(test_S) + sum(diag(test_S %*% implied_sigma - 1)) - ncol(test_S)
-      cv_index[i] <- cv_matrix[1,1]
+      ## Maximum Wishart Likelihood (MWL), Cudeck & Browne (1983) CV covariance structures
+      ## Note, C&B use det(S)=|S|
+      distance <- log( det(implied_sigma) ) - log( det(test_S) ) + sum(diag( test_S %*% solve(implied_sigma) ) ) - ncol(test_S)      
+
+      ## collect distance metrics for each fold
+      cv_index[i] <- distance
     }
 
     model_cv[j,] <- data.frame(Model = model_names[j], Cross_Validation_Index = mean(cv_index))

@@ -11,7 +11,7 @@ colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
 model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 
 model2 <- 'comprehension ~ wordMeaning
-            sentenceCompletion ~ wordMeaning
+            sentenceCompletion ~ 0*wordMeaning
             comprehension ~~ 0*wordMeaning'
 
 
