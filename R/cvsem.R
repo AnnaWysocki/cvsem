@@ -72,7 +72,3 @@ cvsem <- function(x, Models, k = 5){
   return(model_cv)
 
   }
-
-
-
-
