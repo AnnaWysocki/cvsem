@@ -19,6 +19,6 @@
 KL_divergence <- function(S0, S1){
 
   K = ncol(S0)
-  kl<- log(det(S1)/det(S0)) - sum(diag((S1-solve(S0)))) + K
+  kl<- log(det(S1)/det(S0)) - sum(diag((S1 %*% solve(S0)))) + K
   return(kl)
 }

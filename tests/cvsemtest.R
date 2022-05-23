@@ -17,4 +17,4 @@ model2 <- 'comprehension ~ wordMeaning
 
 model_list <- list(model1, model2)
 
-cvsem( x =  example_data, Models = model_list, k =  10)
+cvsem( x =  example_data, Models = model_list, k = 100)
