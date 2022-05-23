@@ -2,6 +2,7 @@
 #'
 #' @param x Data
 #' @param Models A list of specified models in lavaan syntax
+#' @param distanceMetric Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)
 #' @param k The number of folds. Default is 5.
 #' @param lavaan_function Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
 #'
@@ -28,11 +29,13 @@
 #'
 
 
-cvsem <- function(x, Models, k = 5, lavaan_function = "sem"){
+cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem"){
 
   stopifnot("`k` must be numeric " = is.numeric(k))
 
-  match.arg(arg = lavaan_function, choices = c("sem", "lavaan", "cfa"))
+  match.arg(arg = lavaanFunction, choices = c("sem", "lavaan", "cfa"))
+  match.arg(arg = distanceMetric, choices = c("KL-Divergence", "MWL"))
+
 
   model_number <- length(Models)
   model_cv <- data.frame(Model = rep(0, model_number),
@@ -59,9 +62,9 @@ cvsem <- function(x, Models, k = 5, lavaan_function = "sem"){
 
       train_data <- folds[[i]]$training
 
-      if(lavaan_function == "sem"){
+      if(lavaanFunction == "sem"){
         model_results <- lavaan::sem(model = model, data = train_data)
-      } else if (lavaan_function == "lavaan"){
+      } else if (lavaanFunction == "lavaan"){
         model_results <- lavaan::lavaan(model = model, data = train_data)
       } else{
         model_results <- lavaan::cfa(model = model, data = train_data)}
@@ -79,9 +82,15 @@ cvsem <- function(x, Models, k = 5, lavaan_function = "sem"){
       if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix.
                                             Try decreasing the number of folds.')
 
-      ## Maximum Wishart Likelihood (MWL), Cudeck & Browne (1983) CV covariance structures
-      ## Note, C&B use det(S)=|S|
-      distance <- log( det(implied_sigma) ) - log( det(test_S) ) + sum(diag( test_S %*% solve(implied_sigma) ) ) - ncol(test_S)
+      if(distanceMetric == "KL-Divergence"){
+
+        distance <- KL_divergence(implied_sigma , test_S)
+
+      } else(
+
+        distance <- MWL(implied_sigma , test_S)
+      )
+
 
       if(is.na(distance) == TRUE){
         stop("Cross validation index cannot be computed. Try decreasing the number of folds.")
@@ -92,6 +101,7 @@ cvsem <- function(x, Models, k = 5, lavaan_function = "sem"){
     }
 
     model_cv[j,] <- data.frame(Model = model_names[j], Cross_Validation_Index = mean(cv_index))
+    colnames(model_cv) <- c("Model", paste0(distanceMetric, "_Index"))
   }
 
   return(model_cv)
