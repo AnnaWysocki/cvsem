@@ -1,5 +1,5 @@
 dat1 <- "lm(Grades ~ ReadComp + EducLvl)"
-dat2 <- "lm(Grades ~ ReadComp + Educlm*Age)"
+xdat2 <- "lm(Grades ~ ReadComp + Educlm*Age)"
 
 ##install.packages("tidyverse")
 ##install.packages("stringr")
