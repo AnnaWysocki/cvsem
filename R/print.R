@@ -2,6 +2,7 @@
 ##' @param x cvsem object
 ##' @param ... not used
 ##' @return Formatted cvsem object
+##' @export
 print.cvsem <- function(x,  ... ) {
   cat('Cross-Validation Results\n')
   cat('Based on ', 'k = ', x$k, 'folds. \n\n' )
