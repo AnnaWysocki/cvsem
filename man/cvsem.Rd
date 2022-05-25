@@ -4,14 +4,24 @@
 \alias{cvsem}
 \title{Do model comparison on SEM models using cross-validation}
 \usage{
-cvsem(x, Models, k = 5)
+cvsem(
+  x,
+  Models,
+  distanceMetric = "KL-Divergence",
+  k = 5,
+  lavaanFunction = "sem"
+)
 }
 \arguments{
 \item{x}{Data}
 
 \item{Models}{A list of specified models in lavaan syntax}
 
+\item{distanceMetric}{Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)}
+
 \item{k}{The number of folds. Default is 5.}
+
+\item{lavaanFunction}{Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"}
 }
 \value{
 A list with the prediction error for each model.

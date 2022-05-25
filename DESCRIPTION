@@ -7,7 +7,7 @@ Authors@R:
     person("Cameron", "allen", , "camallen@ucdavis.edu", role = c("aut")),
     person("Philippe", "Rast", , "prast@ucdavis.edu", role = c("aut")))
 Description: Functions that allow for comparing SEM models using cross-validation.
-License: MIT + file LICENSE
+License: GPL (>=3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.1.2
