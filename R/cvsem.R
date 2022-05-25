@@ -1,3 +1,18 @@
+##' Internal function to extract variable names for each tested model
+##' This is used to find largest umber of folds K
+##' @param X 
+##' @param data 
+##' @return list of variable names
+##' @author philippe
+##' @keywords internal
+.lavaan_vars <- function(X, data) {
+  obj <- lavaan::lavaanify(model = X)
+  unique_names <- unique( c( obj$lhs, obj$rhs ) )
+  given_names <- names( data )
+  unique_names[unique_names %in% given_names]
+}
+
+
 #' Do model comparison on SEM models using cross-validation
 #'
 #' @param x Data
@@ -44,17 +59,23 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
   
   ## Check for K; it can not be so large to generate test sets that are high-dimensional
   ## i.e., nrow > ncol of test data to be able to invert covariance matrix
-  ## check here:
-
   ## First: Obtain model with maximal amount of variables - this defines the max(K) that is allowed
   ##
-  #lavaan::cfaList
-  
+  ## Extract observed variable names for model 
+  model_vars = lapply(Models, FUN = .lavaan_vars,  data = x )
+
+  ## Find highes number of models across all models:
+  max_vars = max( sapply( model_vars, FUN = length ) )
+
+  ## Check user provided k and check against highest possible K. Stop and warn if
+  ## K is too large. Round to next lower integer with floor()
+  ## Max k is for nrows/(vars + 1) 
+  max_k = floor( nrow(x)/( max_vars + 1 ) )
+
+  if( k > max_k ) stop('\n Covariance matrix cannot be inverted. \n At least one of your test folds has fewer rows than columns of data. \n Decrease k to at least: ', max_k)
+
   folds <- createFolds(x, k = k)
-
-  
-    if( nrow(folds[[1]]$test) < 2 ) stop('Covariance matrix cannot be inverted because at least one of your test folds fewer rows than columns. Decrease k to at least: ')
-
+    
     if(is.null(names(Models)) != TRUE){
 
         model_names<- names(Models)
