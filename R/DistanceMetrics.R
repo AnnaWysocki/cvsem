@@ -26,7 +26,7 @@ KL_divergence <- function(implied_sigma, test_S){
 
   p <- ncol(implied_sigma)
 
-  KL <- log(det(implied_sigma)/det(test_S)) - sum(diag((implied_sigma %*% solve(test_S)))) + p
+  KL <- (sum(diag(solve(test_S) %*% implied_sigma)) - p + log(det(test_S)/det(implied_sigma)) )
   return(KL)
 }
 
@@ -58,7 +58,8 @@ KL_divergence <- function(implied_sigma, test_S){
 MWL <- function(implied_sigma, test_S){
 
   p <- ncol(implied_sigma)
-  mwl <- log( det(implied_sigma) ) - log( det(test_S) ) + sum(diag( test_S %*% solve(implied_sigma) ) ) - p
+  mwl <-
+    log( det(implied_sigma) ) - log( det(test_S) ) + sum(diag( test_S %*% solve(implied_sigma) ) ) - p
   return(mwl)
 }
 

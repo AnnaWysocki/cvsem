@@ -20,7 +20,8 @@
 #' @param distanceMetric Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)
 #' @param k The number of folds. Default is 5.
 #' @param lavaanFunction Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
-#'
+#' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress. 
+#' @param ... Not used 
 #' @return A list with the prediction error for each model.
 #' @export
 #'
@@ -42,9 +43,8 @@
 
 #' model_list <- list(model1, model2)
 #'
-
-
-cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem"){
+cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
+                  echo = TRUE, ...){
   
   stopifnot("`k` must be numeric " = is.numeric(k))
   
@@ -54,7 +54,8 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
   
   model_number <- length(Models)
   model_cv <- data.frame(Model = rep(0, model_number),
-                         Cross_Validation = rep(0, model_number))
+                         Cross_Validation = rep(0, model_number),
+                         SD = rep(0, model_number))
   
   
   ## Check for K; it can not be so large to generate test sets that are high-dimensional
@@ -62,7 +63,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
   ## First: Obtain model with maximal amount of variables - this defines the max(K) that is allowed
   ##
   ## Extract observed variable names for model 
-  model_vars = lapply(Models, FUN = .lavaan_vars,  data = x )
+  model_vars = lapply( Models, FUN = .lavaan_vars, data = x )
 
   ## Find highes number of models across all models:
   max_vars = max( sapply( model_vars, FUN = length ) )
@@ -75,65 +76,75 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
   if( k > max_k ) stop('\n Covariance matrix cannot be inverted. \n At least one of your test folds has fewer rows than columns of data. \n Decrease k to at least: ', max_k)
 
   folds <- createFolds(x, k = k)
-    
-    if(is.null(names(Models)) != TRUE){
+  
+  if(is.null(names(Models)) != TRUE){
 
-        model_names<- names(Models)
+    model_names<- names(Models)
 
-    }else{
+  }else{
 
-        model_names <- paste0("Model_", seq( 1: model_number))}
+    model_names <- paste0("Model_", seq( 1: model_number))}
 
-    for(j in seq_len(model_number) ){
+  for(j in seq_len(model_number) ){
 
-        model <- Models[[j]]
-        cv_index <- NULL
+    model <- Models[[j]]
+    cv_index <- NULL
 
-        for(i in 1:k){
-
-            train_data <- folds[[i]]$training
-
-            if(lavaanFunction == "sem"){
-                model_results <- lavaan::sem(model = model, data = train_data)
-            } else if (lavaanFunction == "lavaan"){
-                model_results <- lavaan::lavaan(model = model, data = train_data)
-            } else{
-                model_results <- lavaan::cfa(model = model, data = train_data)}
-
-
-            implied_sigma_lavaan <- lavaan::inspect(model_results, what = "cov.ov")
-
-            implied_sigma <- matrix(data = 0, nrow = nrow(implied_sigma_lavaan), ncol = ncol(implied_sigma_lavaan))
-            implied_sigma[lower.tri(implied_sigma)] <- implied_sigma_lavaan[lower.tri(implied_sigma_lavaan)]
-            implied_sigma <- implied_sigma + t(implied_sigma)
-            diag(implied_sigma) <- diag(implied_sigma_lavaan)
-
-            test_S <- stats::cov(folds[[i]]$test[, colnames(lavaan::inspect(model_results, what = "data"))])
-
-            if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix.
-                                            Try decreasing the number of folds.')
-
-            if(distanceMetric == "KL-Divergence"){
-
-                distance <- KL_divergence(implied_sigma , test_S)
-
-            } else(
-
-                  distance <- MWL(implied_sigma , test_S)
-              )
-
-
-            if(is.na(distance) == TRUE){
-                stop("Cross validation index cannot be computed. Try decreasing the number of folds.")
-            }
-
-            ## collect distance metrics for each fold
-            cv_index[i] <- distance
-        }
-
-        model_cv[j,] <- data.frame(Model = model_names[j], Cross_Validation_Index = mean(cv_index))
-        colnames(model_cv) <- c("Model", paste0(distanceMetric, "_Index"))
+    ## Give some feedback
+    if( echo ) {
+     print(paste0( 'Cross-Validating model: ', j ) ) 
     }
+
+    for(i in 1:k){
+
+      train_data <- folds[[i]]$training
+
+      if(lavaanFunction == "sem"){
+        model_results <- lavaan::sem(model = model, data = train_data)
+      } else if (lavaanFunction == "lavaan"){
+        model_results <- lavaan::lavaan(model = model, data = train_data)
+      } else{
+        model_results <- lavaan::cfa(model = model, data = train_data)}
+
+      ## Extract covariance matrix of observed variables. lavvan returns lower.tri
+      implied_sigma_lavaan <- lavaan::inspect(model_results, what = "cov.ov")
+      
+      implied_sigma <- matrix(data = 0, nrow = nrow(implied_sigma_lavaan),
+                                        ncol = ncol(implied_sigma_lavaan))
+      implied_sigma[lower.tri(implied_sigma)] <- implied_sigma_lavaan[lower.tri(implied_sigma_lavaan)]
+      implied_sigma <- implied_sigma + t(implied_sigma)
+      diag(implied_sigma) <- diag(implied_sigma_lavaan)
+
+      test_S <- stats::cov(folds[[i]]$test[, colnames(lavaan::inspect(model_results, what = "data"))])
+
+      if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix.
+                                            Inspect you data for missing values.')
+
+      if(distanceMetric == "KL-Divergence"){
+
+        distance <-
+          KL_divergence(test_S, implied_sigma)
+
+      } else(
+
+          distance <-
+            MWL(implied_sigma , test_S)
+        )
+
+
+      if(is.na(distance) == TRUE){
+        stop("Cross validation index cannot be computed. Try decreasing the number of folds.")
+      }
+
+      ## collect distance metrics for each fold
+      cv_index[i] <- distance
+    }
+
+    model_cv[j,] <- data.frame(Model = model_names[j],
+                               Cross_Validation_Index = mean(cv_index),
+                               SD = stats::sd(cv_index))
+    colnames(model_cv) <- c("Model", paste0(distanceMetric, "_Index"), "SD")
+  }
 
   out = list(model_cv = model_cv,
              k = k,

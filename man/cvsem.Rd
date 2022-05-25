@@ -9,7 +9,9 @@ cvsem(
   Models,
   distanceMetric = "KL-Divergence",
   k = 5,
-  lavaanFunction = "sem"
+  lavaanFunction = "sem",
+  echo = TRUE,
+  ...
 )
 }
 \arguments{
@@ -22,6 +24,10 @@ cvsem(
 \item{k}{The number of folds. Default is 5.}
 
 \item{lavaanFunction}{Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"}
+
+\item{echo}{Provide feeback on progess to user, defaults to \code{TRUE}. Set to \code{FALSE} to supppress.}
+
+\item{...}{Not used}
 }
 \value{
 A list with the prediction error for each model.
