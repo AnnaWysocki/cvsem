@@ -1,7 +1,7 @@
 ##' Internal function to extract variable names for each tested model
 ##' This is used to find largest umber of folds K
-##' @param X 
-##' @param data 
+##' @param X
+##' @param data
 ##' @return list of variable names
 ##' @author philippe
 ##' @keywords internal
@@ -20,8 +20,8 @@
 #' @param distanceMetric Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)
 #' @param k The number of folds. Default is 5.
 #' @param lavaanFunction Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
-#' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress. 
-#' @param ... Not used 
+#' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress.
+#' @param ... Not used
 #' @return A list with the prediction error for each model.
 #' @export
 #'
@@ -45,38 +45,44 @@
 #'
 cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
                   echo = TRUE, ...){
-  
+
   stopifnot("`k` must be numeric " = is.numeric(k))
-  
+
   match.arg(arg = lavaanFunction, choices = c("sem", "lavaan", "cfa"))
   match.arg(arg = distanceMetric, choices = c("KL-Divergence", "MWL"))
-  
-  
+
+
   model_number <- length(Models)
   model_cv <- data.frame(Model = rep(0, model_number),
                          Cross_Validation = rep(0, model_number),
                          SD = rep(0, model_number))
-  
-  
+
+
   ## Check for K; it can not be so large to generate test sets that are high-dimensional
   ## i.e., nrow > ncol of test data to be able to invert covariance matrix
   ## First: Obtain model with maximal amount of variables - this defines the max(K) that is allowed
   ##
-  ## Extract observed variable names for model 
-  model_vars = lapply( Models, FUN = .lavaan_vars, data = x )
+  ## Extract observed variable names for model
+  model_vars <- lapply( Models, FUN = .lavaan_vars, data = x )
 
-  ## Find highes number of models across all models:
-  max_vars = max( sapply( model_vars, FUN = length ) )
+  ## Find number of unique variables across all models. Since we want to compare
+  ## covariance matrices that are the same size, we will augment each of the
+  ## model-implied covariance matrices to have the same variables across the models
+  ## we want to compare
+
+  all_var_labels <- unique( unlist( model_vars ) )
+
+  max_vars <- length(all_var_labels)
 
   ## Check user provided k and check against highest possible K. Stop and warn if
   ## K is too large. Round to next lower integer with floor()
-  ## Max k is for nrows/(vars + 1) 
-  max_k = floor( nrow(x)/( max_vars + 1 ) )
+  ## Max k is for nrows/(vars + 1)
+  max_k <- floor( nrow(x)/( max_vars + 1 ) )
 
   if( k > max_k ) stop('\n Covariance matrix cannot be inverted. \n At least one of your test folds has fewer rows than columns of data. \n Decrease k to at least: ', max_k)
 
   folds <- createFolds(x, k = k)
-  
+
   if(is.null(names(Models)) != TRUE){
 
     model_names<- names(Models)
@@ -92,8 +98,10 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
     ## Give some feedback
     if( echo ) {
-     print(paste0( 'Cross-Validating model: ', j ) ) 
+     print(paste0( 'Cross-Validating model: ', j ) )
     }
+
+    # Augment sample and implied covariance matrix...
 
     for(i in 1:k){
 
@@ -106,19 +114,61 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
       } else{
         model_results <- lavaan::cfa(model = model, data = train_data)}
 
-      ## Extract covariance matrix of observed variables. lavvan returns lower.tri
+      ## Obtain test sample covariance matrix
+
+      test_data <- folds[[i]]$test
+
+      test_S <- cov(test_data[, all_var_labels])
+
+      if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix.
+                                            Inspect your data for missing values.')
+
+      ## Obtain training model-implied covariance matrix
+
+       # First extract model-implied covariance matrix of observed variables.
+       # lavvan returns lower.tri so we have to make the matrix symmetric manually
+
       implied_sigma_lavaan <- lavaan::inspect(model_results, what = "cov.ov")
-      
+
       implied_sigma <- matrix(data = 0, nrow = nrow(implied_sigma_lavaan),
                                         ncol = ncol(implied_sigma_lavaan))
       implied_sigma[lower.tri(implied_sigma)] <- implied_sigma_lavaan[lower.tri(implied_sigma_lavaan)]
       implied_sigma <- implied_sigma + t(implied_sigma)
       diag(implied_sigma) <- diag(implied_sigma_lavaan)
 
-      test_S <- stats::cov(folds[[i]]$test[, colnames(lavaan::inspect(model_results, what = "data"))])
+      colnames(implied_sigma) <- rownames(implied_sigma) <- colnames(implied_sigma_lavaan)
 
-      if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix.
-                                            Inspect you data for missing values.')
+       # Next, augment the covariance matrix (if needed) so that the test covariance matrix has same
+       # variables as test_S
+
+      if( !setequal( colnames( implied_sigma ), colnames( test_S ))){
+
+         aug_implied_sigma <- matrix(0, nrow = max_vars, ncol = max_vars)
+         colnames(aug_implied_sigma) <- rownames(aug_implied_sigma) <- colnames(test_S)
+
+         for(c in 1:max_vars){
+
+           columnname <- all_var_labels[c]
+
+           for(r in 1:max_vars){
+
+             rowname <- all_var_labels[r]
+
+             try(aug_implied_sigma[rowname, columnname] <- implied_sigma[rowname, columnname])
+           }
+
+           # Add sample variances to 0 diagonals
+           add_variances <- which( diag(aug_implied_sigma) == 0)
+
+           for(v in 1: length(add_variances)){
+
+             aug_implied_sigma[add_variances[v], add_variances[v]] <- test_S[add_variances[v], add_variances[v]]
+
+           }}
+
+         implied_sigma <- aug_implied_sigma
+
+         }
 
       if(distanceMetric == "KL-Divergence"){
 
@@ -129,6 +179,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
           distance <-
             MWL(implied_sigma , test_S)
+
         )
 
 
@@ -149,7 +200,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
   out = list(model_cv = model_cv,
              k = k,
              distanceMetric = distanceMetric)
-  
+
   class(out) = "cvsem"
   out
 }
