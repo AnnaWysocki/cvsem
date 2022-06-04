@@ -4,14 +4,30 @@
 \alias{cvsem}
 \title{Do model comparison on SEM models using cross-validation}
 \usage{
-cvsem(x, Models, k = 5)
+cvsem(
+  x,
+  Models,
+  distanceMetric = "KL-Divergence",
+  k = 5,
+  lavaanFunction = "sem",
+  echo = TRUE,
+  ...
+)
 }
 \arguments{
 \item{x}{Data}
 
 \item{Models}{A list of specified models in lavaan syntax}
 
+\item{distanceMetric}{Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)}
+
 \item{k}{The number of folds. Default is 5.}
+
+\item{lavaanFunction}{Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"}
+
+\item{echo}{Provide feeback on progess to user, defaults to \code{TRUE}. Set to \code{FALSE} to supppress.}
+
+\item{...}{Not used}
 }
 \value{
 A list with the prediction error for each model.
@@ -20,7 +36,19 @@ A list with the prediction error for each model.
 Do model comparison on SEM models using cross-validation
 }
 \examples{
-data <- c(1, 2, 3)
-Models <- "xx"
-cvsem(x = data, Models = Models)
+
+example_data <- lavaan::HolzingerSwineford1939
+colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
+"visualPerception", "cubes", "lozenges", "comprehension",
+"sentenceCompletion", "wordMeaning", "speededAddition",
+"speededCounting", "speededDiscrimination")
+
+model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
+model2 <- 'comprehension ~ wordMeaning
+           sentenceCompletion ~ wordMeaning
+
+           comprehension ~~ 0*wordMeaning'
+
+model_list <- list(model1, model2)
+
 }

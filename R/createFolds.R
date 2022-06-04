@@ -1,4 +1,4 @@
-createFolds <- function(data, k = 5){
+createFolds <- function(data, k){
 
   s <- nrow(data)/k
 
@@ -10,26 +10,26 @@ createFolds <- function(data, k = 5){
     s <- floor(s)
   }
 
-  for( i in 0:(k-1) ) {
+  bank <- 1:nrow(data)
+  sub_bank <- bank
 
-    rowstart <- 1 + (i * s)
+  for(i in 1:k){
 
-    if( (i + 1) < k) {
+    if(i < k){
 
-      rowstop <- (i + 1) * s
+      test <- sample(sub_bank, size = s, replace = F)
+      sub_bank <- sub_bank[-test]
 
-    }else{
+      train <- bank[-test]
 
-      rowstop <- nrow(data)
-    }
+    } else{
 
-    subsetrows <- rowstart:rowstop
+      test <- sub_bank
+      train <- bank[-test]
 
-    test <- data[subsetrows, ]
-    training <- data[-subsetrows,]
+    }}
 
-    folds[[i + 1]] <- list(test = test, training = training)
+    folds[[i]] <- list(test = test, training = train)
 
-  }
   return(folds)
 }
