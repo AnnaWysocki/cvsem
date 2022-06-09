@@ -1,8 +1,8 @@
 ## load all R functions
 # devtools::load_all()
 options(width = 250 )
-usethis::use_readme_rmd()
-devtools::build_readme( )
+#usethis::use_readme_rmd()
+#devtools::build_readme( )
 ## Example form cvsem main function
 example_data <- lavaan::HolzingerSwineford1939
 
@@ -43,4 +43,5 @@ Models <- model_list
 distanceMetric = "KL-Divergence"
 k = 5
 lavaanFunction = "sem"
+
 

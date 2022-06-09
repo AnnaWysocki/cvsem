@@ -1,7 +1,7 @@
 ##' Internal function to extract variable names for each tested model
 ##' This is used to find largest umber of folds K
-##' @param X
-##' @param data
+##' @param X lavaan model
+##' @param data Data
 ##' @return list of variable names
 ##' @author philippe
 ##' @keywords internal
@@ -23,6 +23,7 @@
 #' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress.
 #' @param ... Not used
 #' @return A list with the prediction error for each model.
+#' @importFrom stats cov
 #' @export
 #'
 #' @examples
@@ -38,7 +39,7 @@
 #' model2 <- 'comprehension ~ wordMeaning
 #'            sentenceCompletion ~ wordMeaning
 #'
-#'            comprehension ~~ 0*wordMeaning'
+#'            comprehension ~~ 0.5*wordMeaning'
 #'
 
 #' model_list <- list(model1, model2)
@@ -72,12 +73,18 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
   all_var_labels <- unique( unlist( model_vars ) )
 
+  ## TODO: If we use max_vars in the creation of the cov-mat it might create
+  ## very large sparse matrices - may need to be revisited and replaced
+  ## with max_vars_model.
+  ## This finds the single largest model:
+  max_vars_model = max( sapply( model_vars, FUN = length ) )
+  ## This finds the longest combination of variables across all models:
   max_vars <- length(all_var_labels)
 
   ## Check user provided k and check against highest possible K. Stop and warn if
   ## K is too large. Round to next lower integer with floor()
   ## Max k is for nrows/(vars + 1)
-  max_k <- floor( nrow(x)/( max_vars + 1 ) )
+  max_k <- floor( nrow(x)/( max_vars_model + 1 ) )
 
   if( k > max_k ) stop('\n Covariance matrix cannot be inverted. \n At least one of your test folds has fewer rows than columns of data. \n Decrease k to at least: ', max_k)
 
@@ -91,6 +98,10 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
     model_names <- paste0("Model_", seq( 1: model_number))}
 
+  ## Loop throug list of models and compute distanceMetric
+  ## DistanceMetric needs to be computed on matrix that comprises
+  ## all possible variables, as KL contain penalty for size of matrix.
+  ## Augment impled variance to match that larger matrix. 
   for(j in seq_len(model_number) ){
 
     model <- Models[[j]]
@@ -101,12 +112,12 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
      print(paste0( 'Cross-Validating model: ', j ) )
     }
 
-    # Augment sample and implied covariance matrix...
-
+    ## CV:
     for(i in 1:k){
-
+      ## extract training data:
       train_data <- folds[[i]]$training
 
+      ## Fit model on traingin data:
       if(lavaanFunction == "sem"){
         model_results <- lavaan::sem(model = model, data = train_data)
       } else if (lavaanFunction == "lavaan"){
@@ -115,7 +126,6 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
         model_results <- lavaan::cfa(model = model, data = train_data)}
 
       ## Obtain test sample covariance matrix
-
       test_data <- folds[[i]]$test
 
       test_S <- cov(test_data[, all_var_labels])
