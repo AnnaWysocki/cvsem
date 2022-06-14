@@ -29,7 +29,7 @@ createFolds <- function(data, k){
 
     }
 
-    folds[[i]] <- list(test = test, training = train)
+    folds[[i]] <- list(test = data[test, ], training = data[train, ])
 
     }
 

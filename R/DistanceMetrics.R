@@ -59,7 +59,7 @@ MWL <- function(implied_sigma, test_S){
 
   p <- ncol(implied_sigma)
   mwl <-
-    log( det(implied_sigma) ) - log( det(test_S) ) + sum(diag( test_S %*% solve(implied_sigma) ) ) - p
+    log( det(test_S) ) - log( det(implied_sigma) ) + sum(diag( implied_sigma %*% solve(test_S) ) ) - p
   return(mwl)
 }
 

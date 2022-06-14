@@ -96,13 +96,14 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
   }else{
 
-    model_names <- paste0("Model_", seq( 1: model_number))}
+    model_names <- paste0("Model_", seq( 1: model_number))
+    }
 
-  ## Loop throug list of models and compute distanceMetric
+  ## Loop through list of models and compute distanceMetric
   ## DistanceMetric needs to be computed on matrix that comprises
   ## all possible variables, as KL contain penalty for size of matrix.
-  ## Augment impled variance to match that larger matrix. 
-  for(j in seq_len(model_number) ){
+  ## Augment impled variance to match that larger matrix.
+  for(j in 1:model_number ){
 
     model <- Models[[j]]
     cv_index <- NULL
