@@ -95,9 +95,10 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
     model_names<- names(Models)
 
   }else{
-
+    
     model_names <- paste0("Model_", seq( 1: model_number))
-    }
+
+  }
 
   ## Loop through list of models and compute distanceMetric
   ## DistanceMetric needs to be computed on matrix that comprises
@@ -131,8 +132,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
       test_S <- cov(test_data[, all_var_labels])
 
-      if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix.
-                                            Inspect your data for missing values.')
+      if( any(is.na(test_S)) == TRUE ) stop('NAs have been returned for a test covariance matrix. Inspect your data for missing values.')
 
       ## Obtain training model-implied covariance matrix
 
@@ -154,8 +154,8 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
       if( !setequal( colnames( implied_sigma ), colnames( test_S ))){
 
-         aug_implied_sigma <- matrix(0, nrow = max_vars, ncol = max_vars)
-         colnames(aug_implied_sigma) <- rownames(aug_implied_sigma) <- colnames(test_S)
+        aug_implied_sigma <- matrix(0, nrow = max_vars, ncol = max_vars)
+        colnames(aug_implied_sigma) <- rownames(aug_implied_sigma) <- colnames(test_S)
 
          for(c in 1:max_vars){
 
@@ -165,21 +165,25 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
              rowname <- all_var_labels[r]
 
-             try(aug_implied_sigma[rowname, columnname] <- implied_sigma[rowname, columnname])
+             ## Call try() with silent to avoid error message in console 
+             try(aug_implied_sigma[rowname, columnname] <- implied_sigma[rowname, columnname],
+                 silent = TRUE)
            }
-
-           # Add sample variances to 0 diagonals
-           add_variances <- which( diag(aug_implied_sigma) == 0)
-
-           for(v in 1: length(add_variances)){
-
-             aug_implied_sigma[add_variances[v], add_variances[v]] <- test_S[add_variances[v], add_variances[v]]
-
-           }}
-
-         implied_sigma <- aug_implied_sigma
-
          }
+
+        ## Add sample variances to 0 diagonals
+        add_variances <-  which( diag(aug_implied_sigma) == 0)
+        
+        for(v in 1:length(add_variances)){
+          
+          aug_implied_sigma[add_variances[v], add_variances[v]] <-
+            test_S[add_variances[v], add_variances[v]]
+          
+        }
+
+        implied_sigma <- aug_implied_sigma
+        
+      }
 
       if(distanceMetric == "KL-Divergence"){
 

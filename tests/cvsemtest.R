@@ -29,10 +29,10 @@ model_list <- list(model1, model2, model3)
 class( model_list )
 
 
-# devtools::load_all()
+## devtools::load_all()
 
 
-fit <- cvsem( x =  example_data, Models = model_list, k = 50, distanceMetric = "KL-Divergence")
+fit <- cvsem( x =  example_data, Models = model_list, k = 10, distanceMetric = "KL-Divergence")
 fit
 
 fit$model_cv
