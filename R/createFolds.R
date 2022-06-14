@@ -27,9 +27,11 @@ createFolds <- function(data, k){
       test <- sub_bank
       train <- bank[-test]
 
-    }}
+    }
 
     folds[[i]] <- list(test = test, training = train)
+
+    }
 
   return(folds)
 }
