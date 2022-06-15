@@ -8,7 +8,7 @@
 .lavaan_vars <- function(X, data) {
   obj <- lavaan::lavaanify(model = X)
   unique_names <- unique( c( obj$lhs, obj$rhs ) )
-  given_names <- names( data )
+  given_names <- colnames( data )
   unique_names[unique_names %in% given_names]
 }
 
@@ -95,7 +95,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
     model_names<- names(Models)
 
   }else{
-    
+
     model_names <- paste0("Model_", seq( 1: model_number))
 
   }
@@ -165,7 +165,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
              rowname <- all_var_labels[r]
 
-             ## Call try() with silent to avoid error message in console 
+             ## Call try() with silent to avoid error message in console
              try(aug_implied_sigma[rowname, columnname] <- implied_sigma[rowname, columnname],
                  silent = TRUE)
            }
@@ -173,15 +173,15 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
         ## Add sample variances to 0 diagonals
         add_variances <-  which( diag(aug_implied_sigma) == 0)
-        
+
         for(v in 1:length(add_variances)){
-          
+
           aug_implied_sigma[add_variances[v], add_variances[v]] <-
             test_S[add_variances[v], add_variances[v]]
-          
+
         }
 
-        implied_sigma <- aug_implied_sigma 
+        implied_sigma <- aug_implied_sigma
       }
 
       if(distanceMetric == "KL-Divergence"){
