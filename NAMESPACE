@@ -3,5 +3,7 @@
 S3method(print,cvsem)
 export(KL_divergence)
 export(MWL)
+export(cvgather)
 export(cvsem)
 importFrom(stats,cov)
+importFrom(stats,setNames)

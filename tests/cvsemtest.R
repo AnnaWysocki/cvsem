@@ -1,5 +1,5 @@
 ## load all R functions
-# devtools::load_all()
+##devtools::load_all()
 options(width = 250 )
 #usethis::use_readme_rmd()
 #devtools::build_readme( )
@@ -27,7 +27,7 @@ model3 <- 'comprehension ~ wordMeaning + speededAddition'
 model4 <- 'comprehension ~ wordMeaning + 0.5*speededAddition'
 
 
-model_list <- list( model3, model4)
+model_list <- cvgather( model1, model4, model3, model2)
 class( model_list )
 
 
