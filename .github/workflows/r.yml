@@ -6,23 +6,29 @@
 # See https://github.com/r-lib/actions/tree/master/examples#readme for
 # additional example workflows available for the R community.
 
-name: R
+name: R-CMD-check
 
 on:
   push:
-    branches: [ "cvsemTest" ]
+    branches: [ "main" ]
   pull_request:
-    branches: [ "cvsemTest" ]
+    branches: [ "main" ]
 
 permissions:
   contents: read
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: ${{ matrix.config.os }}
+
+    name: ${{ matrix.config.os }} (${{ matrix.config.r }})
+
     strategy:
       matrix:
-        r-version: ['3.6.3', '4.1.1']
+        config:
+          - { os: windows-latest, r: 'release'}
+          - { os: macOS-latest, r: 'release'}
+          - { os: ubuntu-20.04, r: 'release', rspm: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}          
 
     steps:
       - uses: actions/checkout@v3
@@ -32,9 +38,12 @@ jobs:
           r-version: ${{ matrix.r-version }}
       - name: Install dependencies
         run: |
-          install.packages(c("remotes", "rcmdcheck"))
+          install.packages(c("remotes", "rcmdcheck", "covr"))
           remotes::install_deps(dependencies = TRUE)
         shell: Rscript {0}
       - name: Check
         run: rcmdcheck::rcmdcheck(args = "--no-manual", error_on = "error")
+        shell: Rscript {0}
+      - name: Coverage
+        run: covr::codecov()
         shell: Rscript {0}
