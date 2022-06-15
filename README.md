@@ -57,13 +57,12 @@ Define some models to be compared with `cvsem` using `lavaan` notation:
 ``` r
 model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 
-model2 <- 'comprehension ~ wordMeaning
-           sentenceCompletion ~ 0.5*wordMeaning
+model2 <- 'comprehension ~ meaning
 
            ## Add some latent variables:
 
-           meaning =~ comprehension + wordMeaning + sentenceCompletion
-           speed =~ speededAddition + speededAddition + speededCounting
+           meaning =~ wordMeaning + sentenceCompletion
+           speed =~ speededAddition + speededDiscrimination + speededCounting
            speed ~~ meaning'
 
 model3 <- 'comprehension ~ wordMeaning + speededAddition'
@@ -89,33 +88,6 @@ sample and implied matrix is defined in `distanceMetric`. Here we use
 fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
 #> [1] "Cross-Validating model: 1"
 #> [1] "Cross-Validating model: 2"
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-#> Warning in lavaan::lavaan(model = model, data = train_data, model.type = "sem", : lavaan WARNING:
-#>     the optimizer warns that a solution has NOT been found!
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
-
-#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
-#> variances are negative
 #> [1] "Cross-Validating model: 3"
 ```
 
@@ -130,9 +102,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SD
-#> 2 model2          0.86 0.36
-#> 1 model1          0.90 0.35
-#> 3 model3          1.98 0.36
+#> 1 model1          1.18 0.50
+#> 3 model3          2.06 0.55
+#> 2 model2          3.57 0.57
 ```
 
 ## References

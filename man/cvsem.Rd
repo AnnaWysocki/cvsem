@@ -17,7 +17,7 @@ cvsem(
 \arguments{
 \item{x}{Data}
 
-\item{Models}{A list of specified models in lavaan syntax}
+\item{Models}{A collection of models, specified in lavaan syntax. Provide Models with the \code{cvgather()} function.}
 
 \item{distanceMetric}{Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)}
 
@@ -43,12 +43,15 @@ colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
 "sentenceCompletion", "wordMeaning", "speededAddition",
 "speededCounting", "speededDiscrimination")
 
-model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
-model2 <- 'comprehension ~ wordMeaning
-           sentenceCompletion ~ wordMeaning
+model2 <- 'comprehension ~ meaning
 
-           comprehension ~~ 0.5*wordMeaning'
+           ## Add some latent variables:
+        meaning =~ wordMeaning + sentenceCompletion
+        speed =~ speededAddition + speededDiscrimination + speededCounting
+        speed ~~ meaning'
 
-model_list <- list(model1, model2)
+model3 <- 'comprehension ~ wordMeaning + speededAddition'
+
+model_list <- cvgather(model1, model2)
 
 }

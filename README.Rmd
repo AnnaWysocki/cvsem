@@ -57,13 +57,12 @@ Define some models to be compared with `cvsem` using `lavaan` notation:
 ```{r}
 model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 
-model2 <- 'comprehension ~ wordMeaning
-           sentenceCompletion ~ 0.5*wordMeaning
+model2 <- 'comprehension ~ meaning
 
            ## Add some latent variables:
 
-           meaning =~ comprehension + wordMeaning + sentenceCompletion
-           speed =~ speededAddition + speededAddition + speededCounting
+           meaning =~ wordMeaning + sentenceCompletion
+           speed =~ speededAddition + speededDiscrimination + speededCounting
            speed ~~ meaning'
 
 model3 <- 'comprehension ~ wordMeaning + speededAddition'

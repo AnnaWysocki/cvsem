@@ -15,13 +15,11 @@
 #'
 #' model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 #'
-#'fit<- lavaan::sem(model1, data = example_data)
+#' fit<- lavaan::sem(model1, data = example_data)
 #'
-#'implied_sigma <- fit@implied[["cov"]][[1]]
-#'test_S <- fit@SampleStats@cov[[1]]
-
+#' implied_sigma <- fit@implied[["cov"]][[1]]
+#' test_S <- fit@SampleStats@cov[[1]]
 #' KL_divergence(implied_sigma , test_S)
-
 KL_divergence <- function(implied_sigma, test_S){
 
   p <- ncol(implied_sigma)
@@ -48,13 +46,12 @@ KL_divergence <- function(implied_sigma, test_S){
 #'
 #' model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 #'
-#'fit<- lavaan::sem(model1, data = example_data)
+#' fit<- lavaan::sem(model1, data = example_data)
 #'
-#'implied_sigma <- fit@implied[["cov"]][[1]]
-#'test_S <- fit@SampleStats@cov[[1]]
-
+#' implied_sigma <- fit@implied[["cov"]][[1]]
+#' test_S <- fit@SampleStats@cov[[1]]
+#'
 #' MWL(implied_sigma , test_S)
-
 MWL <- function(implied_sigma, test_S){
 
   p <- ncol(implied_sigma)
@@ -62,10 +59,4 @@ MWL <- function(implied_sigma, test_S){
     log( det(test_S) ) - log( det(implied_sigma) ) + sum(diag( implied_sigma %*% solve(test_S) ) ) - p
   return(mwl)
 }
-
-
-
-
-
-
 

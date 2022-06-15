@@ -34,14 +34,15 @@
 #' "sentenceCompletion", "wordMeaning", "speededAddition",
 #' "speededCounting", "speededDiscrimination")
 #'
-#' model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
-
-#' model2 <- 'comprehension ~ wordMeaning
-#'            sentenceCompletion ~ wordMeaning
+#' model2 <- 'comprehension ~ meaning
+#' 
+#'            ## Add some latent variables:
+#'         meaning =~ wordMeaning + sentenceCompletion
+#'         speed =~ speededAddition + speededDiscrimination + speededCounting
+#'         speed ~~ meaning'
 #'
-#'            comprehension ~~ 0.5*wordMeaning'
+#' model3 <- 'comprehension ~ wordMeaning + speededAddition'
 #'
-
 #' model_list <- cvgather(model1, model2)
 #'
 cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
