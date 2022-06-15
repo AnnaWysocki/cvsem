@@ -5,10 +5,19 @@
 
 <!-- badges: start -->
 
-[![R](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg?branch=cvsemTest)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
+[![R-CMD-check](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
 <!-- badges: end -->
 
-The goal of cvsem is to …
+The **cvsem** package provides cross-validation (CV) of structural
+equation models (SEM) across a user-defined number of folds. CV fits
+individual models via the **lavaan** package (Rosseel 2012) and compares
+the test covariance matrix to the implied covariance matrix for the test
+data for each fold via a prespecified distance metric (defults to
+Kullback-Leibler divergence). The `cvsem` function returns the average
+distance metric with an accordind standard error for each tested model.
+
+Currently, the provided model code needs to follow one of **lavaan**’s
+allowed specifications.
 
 ## Installation
 
@@ -36,9 +45,9 @@ Add column names
 
 ``` r
 colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
-"visualPerception", "cubes", "lozenges", "comprehension",
-"sentenceCompletion", "wordMeaning", "speededAddition",
-"speededCounting", "speededDiscrimination")
+                            "visualPerception", "cubes", "lozenges", "comprehension",
+                            "sentenceCompletion", "wordMeaning", "speededAddition",
+                            "speededCounting", "speededDiscrimination")
 ```
 
 ## Define Models
@@ -49,12 +58,13 @@ Define some models to be compared with `cvsem` using `lavaan` notation:
 model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 
 model2 <- 'comprehension ~ wordMeaning
-            sentenceCompletion ~ 0*wordMeaning
-            comprehension ~~ 0*wordMeaning + speededAddition
-# some latent vars
-meaning =~ comprehension + wordMeaning + sentenceCompletion
-speed =~ speededAddition + speededAddition + speededCounting
-speed ~~ meaning'
+           sentenceCompletion ~ 0.5*wordMeaning
+
+           ## Add some latent variables:
+
+           meaning =~ comprehension + wordMeaning + sentenceCompletion
+           speed =~ speededAddition + speededAddition + speededCounting
+           speed ~~ meaning'
 
 model3 <- 'comprehension ~ wordMeaning + speededAddition'
 ```
@@ -79,6 +89,33 @@ sample and implied matrix is defined in `distanceMetric`. Here we use
 fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
 #> [1] "Cross-Validating model: 1"
 #> [1] "Cross-Validating model: 2"
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+#> Warning in lavaan::lavaan(model = model, data = train_data, model.type = "sem", : lavaan WARNING:
+#>     the optimizer warns that a solution has NOT been found!
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
+
+#> Warning in lav_object_post_check(object): lavaan WARNING: some estimated ov
+#> variances are negative
 #> [1] "Cross-Validating model: 3"
 ```
 
@@ -93,10 +130,12 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SD
-#> 2 model2          0.83 0.30
-#> 1 model1          0.90 0.45
-#> 3 model3          1.78 0.33
+#> 2 model2          0.86 0.36
+#> 1 model1          0.90 0.35
+#> 3 model3          1.98 0.36
 ```
+
+## References
 
 <!-- What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so: -->
 
@@ -117,3 +156,15 @@ fit
 <!-- ``` -->
 
 <!-- In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN. -->
+
+<div id="refs" class="references">
+
+<div id="ref-Rosseel2012lavaan">
+
+Rosseel, Yves. 2012. “lavaan: An R Package for Structural Equation
+Modeling.” *Journal of Statistical Software*.
+<http://www.jstatsoft.org/v48/i02/>.
+
+</div>
+
+</div>

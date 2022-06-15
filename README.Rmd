@@ -1,5 +1,6 @@
 ---
 output: github_document
+bibliography: doc/REFERENCES.bib
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -16,10 +17,12 @@ knitr::opts_chunk$set(
 # cvsem
 
 <!-- badges: start -->
-[![R](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg?branch=cvsemTest)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
+[![R-CMD-check](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
 <!-- badges: end -->
 
-The goal of cvsem is to ...
+The **cvsem** package provides cross-validation (CV) of structural equation models (SEM) across a user-defined number of folds. CV fits individual models via the **lavaan** package [@Rosseel2012lavaan] and compares the test covariance matrix to the implied covariance matrix for the test data for each fold via a prespecified distance metric (defults to Kullback-Leibler divergence). The `cvsem` function returns the average distance metric with an accordind standard error for each tested model.  
+
+Currently, the provided model code needs to follow one of **lavaan**'s allowed specifications. 
 
 ## Installation
 
@@ -44,9 +47,9 @@ example_data <- lavaan::HolzingerSwineford1939
 Add column names
 ```{r}
 colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
-"visualPerception", "cubes", "lozenges", "comprehension",
-"sentenceCompletion", "wordMeaning", "speededAddition",
-"speededCounting", "speededDiscrimination")
+                            "visualPerception", "cubes", "lozenges", "comprehension",
+                            "sentenceCompletion", "wordMeaning", "speededAddition",
+                            "speededCounting", "speededDiscrimination")
 ```
 
 ## Define Models
@@ -55,12 +58,13 @@ Define some models to be compared with `cvsem` using `lavaan` notation:
 model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 
 model2 <- 'comprehension ~ wordMeaning
-            sentenceCompletion ~ 0*wordMeaning
-            comprehension ~~ 0*wordMeaning + speededAddition
-# some latent vars
-meaning =~ comprehension + wordMeaning + sentenceCompletion
-speed =~ speededAddition + speededAddition + speededCounting
-speed ~~ meaning'
+           sentenceCompletion ~ 0.5*wordMeaning
+
+           ## Add some latent variables:
+
+           meaning =~ comprehension + wordMeaning + sentenceCompletion
+           speed =~ speededAddition + speededAddition + speededCounting
+           speed ~~ meaning'
 
 model3 <- 'comprehension ~ wordMeaning + speededAddition'
 ```
@@ -83,6 +87,8 @@ Print cv-object. Note, model with smallest (best) distance metric is listed firs
 ```{r}
 fit
 ```
+
+## References
 
 <!-- What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so: -->
 
