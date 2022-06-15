@@ -47,7 +47,7 @@ model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 model2 <- 'comprehension ~ wordMeaning
            sentenceCompletion ~ wordMeaning
 
-           comprehension ~~ 0*wordMeaning'
+           comprehension ~~ 0.5*wordMeaning'
 
 model_list <- list(model1, model2)
 

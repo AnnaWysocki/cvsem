@@ -24,8 +24,10 @@ speed ~~ meaning'
 
 model3 <- 'comprehension ~ wordMeaning + speededAddition'
 
+model4 <- 'comprehension ~ wordMeaning + 0.5*speededAddition'
 
-model_list <- list(model1, model2, model3)
+
+model_list <- list( model3, model4)
 class( model_list )
 
 
@@ -43,5 +45,7 @@ Models <- model_list
 distanceMetric = "KL-Divergence"
 k = 5
 lavaanFunction = "sem"
-
+echo <- TRUE
+j <- 1
+i <- 1
 

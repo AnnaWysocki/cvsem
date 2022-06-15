@@ -181,8 +181,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
           
         }
 
-        implied_sigma <- aug_implied_sigma
-        
+        implied_sigma <- aug_implied_sigma 
       }
 
       if(distanceMetric == "KL-Divergence"){
@@ -196,7 +195,6 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
             MWL(implied_sigma , test_S)
 
         )
-
 
       if(is.na(distance) == TRUE){
         stop("Cross validation index cannot be computed. Try decreasing the number of folds.")
