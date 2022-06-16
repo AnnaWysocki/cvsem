@@ -61,7 +61,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
     model_number <- length(Models)
     model_cv <- data.frame(Model = rep(0, model_number),
                            Cross_Validation = rep(0, model_number),
-                           SD = rep(0, model_number))
+                           SE = rep(0, model_number))
 
 
     ## Check for K; it can not be so large to generate test sets that are high-dimensional
@@ -211,8 +211,8 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
       model_cv[j,] <- data.frame(Model = model_names[j],
                                  Cross_Validation_Index = mean(cv_index),
-                                 SD = stats::sd(cv_index))
-      colnames(model_cv) <- c("Model", paste0(distanceMetric, "_Index"), "SD")
+                                 SE = stats::sd(cv_index))
+      colnames(model_cv) <- c("Model", paste0(distanceMetric, "_Index"), "SE")
     }
 
     out = list(model_cv = model_cv,
