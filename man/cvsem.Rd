@@ -2,12 +2,12 @@
 % Please edit documentation in R/cvsem.R
 \name{cvsem}
 \alias{cvsem}
-\title{Do model comparison on SEM models using cross-validation}
+\title{Cross-Validation of Structural Equation Models}
 \usage{
 cvsem(
   x,
   Models,
-  distanceMetric = "KL-Divergence",
+  discrepancyMetric = "KL-Divergence",
   k = 5,
   lavaanFunction = "sem",
   echo = TRUE,
@@ -19,7 +19,7 @@ cvsem(
 
 \item{Models}{A collection of models, specified in lavaan syntax. Provide Models with the \code{cvgather()} function.}
 
-\item{distanceMetric}{Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)}
+\item{discrepancyMetric}{Specify which discrepancy metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)}
 
 \item{k}{The number of folds. Default is 5.}
 
@@ -33,7 +33,8 @@ cvsem(
 A list with the prediction error for each model.
 }
 \description{
-Do model comparison on SEM models using cross-validation
+Do model comparison on SEM models using cross-validation as described
+in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
 }
 \examples{
 
@@ -55,6 +56,9 @@ model3 <- 'comprehension ~ wordMeaning + speededAddition'
 
 models <- cvgather(model1, model2, model3)
 
-fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
+fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 
+}
+\references{
+\insertAllCited()
 }

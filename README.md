@@ -9,14 +9,19 @@
 <!-- badges: end -->
 
 The **cvsem** package provides cross-validation (CV) of structural
-equation models (SEM) across a user-defined number of folds (Cudeck and
-Browne [1983](#ref-Cudeck1983)). CV fits individual models via the
-**lavaan** package (Rosseel [2012](#ref-Rosseel2012lavaan)) and compares
-the test covariance matrix to the implied covariance matrix from the
-training data for each fold via a prespecified distance metric (defults
-to Kullback-Leibler divergence). The `cvsem` function returns the
-average distance metric with a corresponding standard error for each
-tested model.
+equation models (SEM) across a user-defined number of folds. CV is based
+on computing the discrepancy among the held-out test sample covariance
+and the model implied covariance from the traingin samples. This
+approach of cross-validating SEM’s is described in Cudeck and Browne
+([1983](#ref-Cudeck1983)) and Browne and Cudeck
+([1992](#ref-BrowneCudeck1992)). The individual models are fitted via
+the **lavaan** package (Rosseel [2012](#ref-Rosseel2012lavaan)) to
+obtain the model implied covariance matrix. The discrepancy of the
+implied matrix to the test sample covariance matrix is obtained via a
+prespecified metric (defults to Kullback-Leibler divergence aka. Maximum
+Likelihood discrepancy). The `cvsem` function returns the average
+discrepancy together with a corresponding standard error for each tested
+model.
 
 Currently, the provided model code needs to follow one of **lavaan**’s
 allowed specifications.
@@ -103,10 +108,10 @@ fit
 #> Cross-Validation Results of 3 models 
 #> based on  k =  10 folds. 
 #> 
-#>    Model KL-Divergence   SD
-#> 1 model1          1.19 0.41
-#> 3 model3          2.24 0.40
-#> 2 model2          3.60 0.97
+#>    Model KL-Divergence   SE
+#> 1 model1          1.16 0.28
+#> 3 model3          2.16 0.29
+#> 2 model2          3.50 0.45
 ```
 
 ## References
@@ -132,6 +137,14 @@ fit
 <!-- In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN. -->
 
 <div id="refs" class="references">
+
+<div id="ref-BrowneCudeck1992">
+
+Browne, Michael W., and Robert Cudeck. 1992. “Alternative Ways of
+Assessing Model Fit.” *Sociological Methods & Research* 21: 230–58.
+<https://doi.org/10.1177/0049124192021002005>.
+
+</div>
 
 <div id="ref-Cudeck1983">
 

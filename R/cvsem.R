@@ -13,17 +13,22 @@
 }
 
 
-#' Do model comparison on SEM models using cross-validation
+#' Do model comparison on SEM models using cross-validation as described
+#' in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
 #'
+#' @title Cross-Validation of Structural Equation Models
 #' @param x Data
 #' @param Models A collection of models, specified in lavaan syntax. Provide Models with the `cvgather()` function.
-#' @param distanceMetric Specify which distance metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)
+#' @param discrepancyMetric Specify which discrepancy metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)
 #' @param k The number of folds. Default is 5.
 #' @param lavaanFunction Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
 #' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress.
 #' @param ... Not used
 #' @return A list with the prediction error for each model.
 #' @importFrom stats cov
+#' @importFrom Rdpack reprompt
+#' @references
+#'    \insertAllCited()
 #' @export
 #'
 #' @examples
@@ -46,15 +51,15 @@
 #' 
 #' models <- cvgather(model1, model2, model3)
 #'
-#' fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
+#' fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 #' 
-cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
+cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
                   echo = TRUE, ...){
 
   stopifnot("`k` must be numeric " = is.numeric(k))
 
   match.arg(arg = lavaanFunction, choices = c("sem", "lavaan", "cfa"))
-  match.arg(arg = distanceMetric, choices = c("KL-Divergence", "MWL"))
+  match.arg(arg = discrepancyMetric, choices = c("KL-Divergence", "MWL"))
 
   if (!class(Models) == "cvgather") stop("Use `cvgather` to collect the models for the `Models` argument.")
     
@@ -105,8 +110,8 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
     }
 
-    ## Loop through list of models and compute distanceMetric
-    ## DistanceMetric needs to be computed on matrix that comprises
+    ## Loop through list of models and compute discrepancyMetric
+    ## discrepancyMetric needs to be computed on matrix that comprises
     ## all possible variables, as KL contain penalty for size of matrix.
     ## Augment impled variance to match that larger matrix.
     for(j in 1:model_number ){
@@ -189,7 +194,7 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
           implied_sigma <- aug_implied_sigma
         }
 
-        if(distanceMetric == "KL-Divergence"){
+        if(discrepancyMetric == "KL-Divergence"){
 
           distance <-
             KL_divergence(test_S, implied_sigma)
@@ -205,19 +210,19 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
           stop("Cross validation index cannot be computed. Try decreasing the number of folds.")
         }
 
-        ## collect distance metrics for each fold
+        ## collect discrepancy metrics for each fold
         cv_index[i] <- distance
       }
 
       model_cv[j,] <- data.frame(Model = model_names[j],
                                  Cross_Validation_Index = mean(cv_index),
                                  SE = stats::sd(cv_index))
-      colnames(model_cv) <- c("Model", paste0(distanceMetric, "_Index"), "SE")
+      colnames(model_cv) <- c("Model", paste0(discrepancyMetric, "_Index"), "SE")
     }
 
     out = list(model_cv = model_cv,
                k = k,
-               distanceMetric = distanceMetric)
+               discrepancyMetric = discrepancyMetric)
 
     class(out) = "cvsem"
     out
