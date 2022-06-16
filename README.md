@@ -11,24 +11,24 @@
 The **cvsem** package provides cross-validation (CV) of structural
 equation models (SEM) across a user-defined number of folds. CV is based
 on computing the discrepancy among the held-out test sample covariance
-and the model implied covariance from the traingin samples. This
+and the model implied covariance from the training samples. This
 approach of cross-validating SEM’s is described in Cudeck and Browne
 ([1983](#ref-Cudeck1983)) and Browne and Cudeck
 ([1992](#ref-BrowneCudeck1992)). The individual models are fitted via
 the **lavaan** package (Rosseel [2012](#ref-Rosseel2012lavaan)) to
 obtain the model implied covariance matrix. The discrepancy of the
 implied matrix to the test sample covariance matrix is obtained via a
-prespecified metric (defults to Kullback-Leibler divergence aka. Maximum
-Likelihood discrepancy). The `cvsem` function returns the average
-discrepancy together with a corresponding standard error for each tested
-model.
+pre-specified metric (defaults to Kullback-Leibler divergence aka.
+Maximum Likelihood discrepancy). The `cvsem` function returns the
+average discrepancy together with a corresponding standard error for
+each tested model.
 
 Currently, the provided model code needs to follow one of **lavaan**’s
 allowed specifications.
 
 ## Installation
 
-You can install the development version of cvsem from
+You can install the development version of **cvsem** from
 [GitHub](https://github.com/) with:
 
 ``` r
@@ -40,7 +40,7 @@ devtools::install_github("AnnaWysocki/cvsem")
 
 Cross-validating the Holzingerswineford1939 dataset
 
-Load package and read in data from the lavaan package:
+Load package and read in data from the **lavaan** package:
 
 ``` r
 library(cvsem)
@@ -51,7 +51,7 @@ example_data <- lavaan::HolzingerSwineford1939
 Add column names
 
 ``` r
-colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
+colnames(example_data) <- c("id", "sex", "ageyr", "agemo", "school", "grade",
                             "visualPerception", "cubes", "lozenges", "comprehension",
                             "sentenceCompletion", "wordMeaning", "speededAddition",
                             "speededCounting", "speededDiscrimination")
@@ -111,9 +111,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SE
-#> 1 model1          1.42 0.43
-#> 3 model3          2.26 0.52
-#> 2 model2          3.50 0.75
+#> 1 model1          1.39 0.37
+#> 3 model3          2.40 0.42
+#> 2 model2          4.23 1.48
 ```
 
 ## References
