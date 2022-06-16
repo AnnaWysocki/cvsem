@@ -102,8 +102,8 @@ fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL
 
 Print fitted `cvsem`-object. Note, the model with the smallest (best)
 discrepancy is listed first. The metric reflects the average of the
-discrepancy metric across all folds (aka. expected cross-validaion index
-(ECVI)) together with the associated standard error.
+discrepancy metric across all folds (aka. expected cross-validation
+index (ECVI)) together with the associated standard error.
 
 ``` r
 fit
@@ -111,9 +111,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SE
-#> 1 model1          1.35 0.41
-#> 3 model3          2.35 0.36
-#> 2 model2          3.89 0.44
+#> 1 model1          1.42 0.43
+#> 3 model3          2.26 0.52
+#> 2 model2          3.50 0.75
 ```
 
 ## References
