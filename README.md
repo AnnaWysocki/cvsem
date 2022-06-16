@@ -86,13 +86,13 @@ models <- cvgather(model1, model2, model3)
 ## Cross-Validate with K-folds
 
 Define number of folds `k` and call `cvsem` function. Here we use `k=10`
-folds. CV is based on the distance between test sample covariance matrix
-and the model implied matrix from the training data. The distance among
-sample and implied matrix is defined in `distanceMetric`. Here we use
-`KL-Divergence`.
+folds. CV is based on the discrepancy between test sample covariance
+matrix and the model implied matrix from the training data. The
+discrepancy among sample and implied matrix is defined in
+`discrepancyMetric`. Here we use `KL-Divergence`.
 
 ``` r
-fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
+fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 #> [1] "Cross-Validating model: 1"
 #> [1] "Cross-Validating model: 2"
 #> [1] "Cross-Validating model: 3"
@@ -100,8 +100,10 @@ fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Di
 
 ## Show Results
 
-Print cv-object. Note, model with smallest (best) distance metric is
-listed first.
+Print fitted `cvsem`-object. Note, the model with the smallest (best)
+discrepancy is listed first. The metric reflects the average of the
+discrepancy metric across all folds (aka. expected cross-validaion index
+(ECVI)) together with the associated standard error.
 
 ``` r
 fit
@@ -109,9 +111,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SE
-#> 1 model1          1.16 0.28
-#> 3 model3          2.16 0.29
-#> 2 model2          3.50 0.45
+#> 1 model1          1.35 0.41
+#> 3 model3          2.35 0.36
+#> 2 model2          3.89 0.44
 ```
 
 ## References
