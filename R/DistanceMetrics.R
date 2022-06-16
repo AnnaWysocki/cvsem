@@ -29,11 +29,14 @@ KL_divergence <- function(implied_sigma, test_S){
 }
 
 
-#' Compute Maximum Wishart Likelihood (MWL) on two covariance matrices
+#' Compute Maximum Wishart Likelihood (MWL) on two covariance matrices defined in \insertCite{Cudeck1983}{cvsem}.
 #'
 #' @param implied_sigma Model implied covariances matrix from training set
 #' @param test_S Sample covariance matrix from test set
 #' @return MWL index
+#' @importFrom Rdpack reprompt
+#' @references
+#'    \insertAllCited()
 #' @export
 #'
 #' @examples

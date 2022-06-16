@@ -103,9 +103,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SD
-#> 1 model1          1.43 0.38
-#> 3 model3          2.40 0.55
-#> 2 model2          3.83 1.24
+#> 1 model1          1.38 0.54
+#> 3 model3          2.40 0.65
+#> 2 model2          3.08 0.97
 ```
 
 ## References
