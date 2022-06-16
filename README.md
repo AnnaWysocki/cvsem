@@ -9,8 +9,9 @@
 <!-- badges: end -->
 
 The **cvsem** package provides cross-validation (CV) of structural
-equation models (SEM) across a user-defined number of folds. CV fits
-individual models via the **lavaan** package (Rosseel 2012) and compares
+equation models (SEM) across a user-defined number of folds (Cudeck and
+Browne [1983](#ref-Cudeck1983)). CV fits individual models via the
+**lavaan** package (Rosseel [2012](#ref-Rosseel2012lavaan)) and compares
 the test covariance matrix to the implied covariance matrix from the
 training data for each fold via a prespecified distance metric (defults
 to Kullback-Leibler divergence). The `cvsem` function returns the
@@ -103,9 +104,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SD
-#> 1 model1          1.38 0.54
-#> 3 model3          2.40 0.65
-#> 2 model2          3.08 0.97
+#> 1 model1          1.19 0.41
+#> 3 model3          2.24 0.40
+#> 2 model2          3.60 0.97
 ```
 
 ## References
@@ -131,6 +132,14 @@ fit
 <!-- In that case, don't forget to commit and push the resulting figure files, so they display on GitHub and CRAN. -->
 
 <div id="refs" class="references">
+
+<div id="ref-Cudeck1983">
+
+Cudeck, Robert, and Michael W. Browne. 1983. “Cross-Validation of
+Covariance Structures.” *Multivariate Behavioral Research* 18: 147–67.
+<https://doi.org/10.1207/s15327906mbr1802_2>.
+
+</div>
 
 <div id="ref-Rosseel2012lavaan">
 

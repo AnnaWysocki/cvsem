@@ -1,6 +1,7 @@
 ---
 output: github_document
 bibliography: inst/REFERENCES.bib
+link-citations: yes
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -20,7 +21,7 @@ knitr::opts_chunk$set(
 [![R-CMD-check](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
 <!-- badges: end -->
 
-The **cvsem** package provides cross-validation (CV) of structural equation models (SEM) across a user-defined number of folds. CV fits individual models via the **lavaan** package [@Rosseel2012lavaan] and compares the test covariance matrix to the implied covariance matrix from the training data for each fold via a prespecified distance metric (defults to Kullback-Leibler divergence). The `cvsem` function returns the average distance metric with a corresponding standard error for each tested model.  
+The **cvsem** package provides cross-validation (CV) of structural equation models (SEM) across a user-defined number of folds [@Cudeck1983]. CV fits individual models via the **lavaan** package [@Rosseel2012lavaan] and compares the test covariance matrix to the implied covariance matrix from the training data for each fold via a prespecified distance metric (defults to Kullback-Leibler divergence). The `cvsem` function returns the average distance metric with a corresponding standard error for each tested model.  
 
 Currently, the provided model code needs to follow one of **lavaan**'s allowed specifications. 
 
