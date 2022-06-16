@@ -110,10 +110,10 @@ fit
 #> Cross-Validation Results of 3 models 
 #> based on  k =  10 folds. 
 #> 
-#>    Model KL-Divergence   SE
-#> 1 model1          1.39 0.37
-#> 3 model3          2.40 0.42
-#> 2 model2          4.23 1.48
+#>    Model E(KL-D)   SE
+#> 1 model1    1.27 0.31
+#> 3 model3    2.24 0.47
+#> 2 model2    3.54 0.69
 ```
 
 ## References

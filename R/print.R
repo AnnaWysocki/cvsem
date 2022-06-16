@@ -15,6 +15,6 @@ print.cvsem <- function(x,  digits = 2, ... ) {
   ## Report
   cat('Cross-Validation Results of', nrow(ord_result) ,'models \n')
   cat('based on ', 'k = ', x$k, 'folds. \n\n' )
-  colnames(ord_result)[2] <- x$discrepancyMetric
+  colnames(ord_result)[2] <- paste0("E(", abbreviate(x$discrepancyMetric), ")")
   print( ord_result )
 }
