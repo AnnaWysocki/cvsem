@@ -34,17 +34,20 @@
 #' "sentenceCompletion", "wordMeaning", "speededAddition",
 #' "speededCounting", "speededDiscrimination")
 #'
-#' model2 <- 'comprehension ~ meaning
+#' model1 <- 'comprehension ~ meaning
 #' 
 #'            ## Add some latent variables:
 #'         meaning =~ wordMeaning + sentenceCompletion
 #'         speed =~ speededAddition + speededDiscrimination + speededCounting
 #'         speed ~~ meaning'
 #'
+#' model2 <- 'comprehension ~ wordMeaning + speededAddition'
 #' model3 <- 'comprehension ~ wordMeaning + speededAddition'
+#' 
+#' models <- cvgather(model1, model2, model3)
 #'
-#' model_list <- cvgather(model1, model2)
-#'
+#' fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
+#' 
 cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
                   echo = TRUE, ...){
 
@@ -138,8 +141,8 @@ cvsem <- function(x, Models, distanceMetric = "KL-Divergence", k = 5, lavaanFunc
 
         ## Obtain training model-implied covariance matrix
 
-                                        # First extract model-implied covariance matrix of observed variables.
-                                        # lavvan returns lower.tri so we have to make the matrix symmetric manually
+        ## First extract model-implied covariance matrix of observed variables.
+        ## lavaan returns lower.tri so we have to make the matrix symmetric manually
 
         implied_sigma_lavaan <- lavaan::inspect(model_results, what = "cov.ov")
 

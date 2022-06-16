@@ -11,10 +11,11 @@
 The **cvsem** package provides cross-validation (CV) of structural
 equation models (SEM) across a user-defined number of folds. CV fits
 individual models via the **lavaan** package (Rosseel 2012) and compares
-the test covariance matrix to the implied covariance matrix for the test
-data for each fold via a prespecified distance metric (defults to
-Kullback-Leibler divergence). The `cvsem` function returns the average
-distance metric with an accordind standard error for each tested model.
+the test covariance matrix to the implied covariance matrix from the
+training data for each fold via a prespecified distance metric (defults
+to Kullback-Leibler divergence). The `cvsem` function returns the
+average distance metric with a corresponding standard error for each
+tested model.
 
 Currently, the provided model code needs to follow one of **lavaan**’s
 allowed specifications.
@@ -80,7 +81,7 @@ models <- cvgather(model1, model2, model3)
 
 Define number of folds `k` and call `cvsem` function. Here we use `k=10`
 folds. CV is based on the distance between test sample covariance matrix
-and the model implied matrix given the test data. The distance among
+and the model implied matrix from the training data. The distance among
 sample and implied matrix is defined in `distanceMetric`. Here we use
 `KL-Divergence`.
 
@@ -102,9 +103,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model KL-Divergence   SD
-#> 1 model1          1.18 0.50
-#> 3 model3          2.06 0.55
-#> 2 model2          3.57 0.57
+#> 1 model1          1.43 0.38
+#> 3 model3          2.40 0.55
+#> 2 model2          3.83 1.24
 ```
 
 ## References

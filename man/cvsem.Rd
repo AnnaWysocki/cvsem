@@ -43,15 +43,18 @@ colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
 "sentenceCompletion", "wordMeaning", "speededAddition",
 "speededCounting", "speededDiscrimination")
 
-model2 <- 'comprehension ~ meaning
+model1 <- 'comprehension ~ meaning
 
            ## Add some latent variables:
         meaning =~ wordMeaning + sentenceCompletion
         speed =~ speededAddition + speededDiscrimination + speededCounting
         speed ~~ meaning'
 
+model2 <- 'comprehension ~ wordMeaning + speededAddition'
 model3 <- 'comprehension ~ wordMeaning + speededAddition'
 
-model_list <- cvgather(model1, model2)
+models <- cvgather(model1, model2, model3)
+
+fit <- cvsem( x = example_data, Models = models, k = 10, distanceMetric = "KL-Divergence")
 
 }
