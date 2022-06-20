@@ -63,3 +63,14 @@ MWL <- function(implied_sigma, test_S){
   return(mwl)
 }
 
+##' Generalized Least Squares (GLS) Discrepancy as defined in \insertCite{Cudeck1983}{cvsem}.
+##' @title Generalized Least Squares Discrepancy Function
+##' @param implied_sigma Model implied covariances matrix from training set
+##' @param test_S Sample covariance matrix from test set 
+##' @return GLS discrepancy
+##' @references
+##'    \insertAllCited()
+gls <- function(implied_sigma, test_S) {
+  gls <- .5 * sum(diag( solve(test_S)%*%(test_S - implied_sigma) ))^2
+  return( gls )
+}

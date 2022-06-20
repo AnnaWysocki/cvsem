@@ -58,8 +58,8 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
 
   stopifnot("`k` must be numeric " = is.numeric(k))
 
-  match.arg(arg = lavaanFunction, choices = c("sem", "lavaan", "cfa"))
-  match.arg(arg = discrepancyMetric, choices = c("KL-Divergence", "MWL"))
+  match.arg(arg = tolower(lavaanFunction), choices = c("sem", "lavaan", "cfa"))
+  match.arg(arg = tolower(discrepancyMetric), choices = c("kl-divergence", "mwl", "gls"))
 
   if (!class(Models) == "cvgather") stop("Use `cvgather` to collect the models for the `Models` argument.")
     
@@ -121,7 +121,7 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
 
       ## Give some feedback
       if( echo ) {
-        print(paste0( 'Cross-Validating model: ', j ) )
+        print(paste0( 'Cross-Validating model: ', model_names[j] ) )
       }
 
       ## CV:
@@ -194,17 +194,19 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
           implied_sigma <- aug_implied_sigma
         }
 
-        if(discrepancyMetric == "KL-Divergence"){
+        if( tolower(discrepancyMetric) == "kl-divergence"){
 
-          distance <-
-            KL_divergence(test_S, implied_sigma)
+          distance <- KL_divergence(test_S, implied_sigma)
 
-        } else(
+        } else if ( tolower(discrepancyMetric) == "mwl") {
 
-            distance <-
-              MWL(implied_sigma , test_S)
+          distance <- MWL(implied_sigma , test_S)
 
-          )
+        } else if ( tolower(discrepancyMetric) == "gls") {
+
+          distance <- gls(implied_sigma , test_S)
+
+        }
 
         if(is.na(distance) == TRUE){
           stop("Cross validation index cannot be computed. Try decreasing the number of folds.")
