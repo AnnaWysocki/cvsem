@@ -40,7 +40,7 @@
 #' "speededCounting", "speededDiscrimination")
 #'
 #' model1 <- 'comprehension ~ meaning
-#' 
+#'
 #'            ## Add some latent variables:
 #'         meaning =~ wordMeaning + sentenceCompletion
 #'         speed =~ speededAddition + speededDiscrimination + speededCounting
@@ -48,11 +48,11 @@
 #'
 #' model2 <- 'comprehension ~ wordMeaning + speededAddition'
 #' model3 <- 'comprehension ~ wordMeaning + speededAddition'
-#' 
+#'
 #' models <- cvgather(model1, model2, model3)
 #'
 #' fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
-#' 
+#'
 cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
                   echo = TRUE, ...){
 
@@ -62,11 +62,12 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
   match.arg(arg = tolower(discrepancyMetric), choices = c("kl-divergence", "mwl", "gls"))
 
   if (!class(Models) == "cvgather") stop("Use `cvgather` to collect the models for the `Models` argument.")
-    
+
     model_number <- length(Models)
     model_cv <- data.frame(Model = rep(0, model_number),
                            Cross_Validation = rep(0, model_number),
-                           SE = rep(0, model_number))
+                           SE = rep(0, model_number),
+                           Model_Warnings= rep(0, model_number))
 
 
     ## Check for K; it can not be so large to generate test sets that are high-dimensional
@@ -124,8 +125,10 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
         print(paste0( 'Cross-Validating model: ', model_names[j] ) )
       }
 
+      model_warning <- rep(0, k)
       ## CV:
       for(i in 1:k){
+
         ## extract training data:
         train_data <- folds[[i]]$training
 
@@ -136,6 +139,9 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
           model_results <- lavaan::lavaan(model = model, data = train_data)
         } else{
           model_results <- lavaan::cfa(model = model, data = train_data)}
+
+         model_warning[i] <- lavaan::inspect(model_results, what = "post.check")
+
 
         ## Obtain test sample covariance matrix
         test_data <- folds[[i]]$test
@@ -218,8 +224,10 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
 
       model_cv[j,] <- data.frame(Model = model_names[j],
                                  Cross_Validation_Index = mean(cv_index),
-                                 SE = stats::sd(cv_index))
-      colnames(model_cv) <- c("Model", paste0(discrepancyMetric, "_Index"), "SE")
+                                 SE = stats::sd(cv_index),
+                                 Warning = any(model_warning == 0))
+      colnames(model_cv) <- c("Model", paste0(discrepancyMetric, "_Index"), "SE",
+                              "Model_Warnings")
     }
 
     out = list(model_cv = model_cv,
