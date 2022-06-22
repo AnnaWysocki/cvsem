@@ -90,7 +90,7 @@ folds. CV is based on the discrepancy between test sample covariance
 matrix and the model implied matrix from the training data. The
 discrepancy among sample and implied matrix is defined in
 `discrepancyMetric`. Currently three discrepancy metrics are available:
-`KL-Distance`, Generalized Least Squares `GLS`, and Frobenius Distance
+`KL-Divergence`, Generalized Least Squares `GLS`, and Frobenius Distance
 `FD`. Here we use `KL-Divergence`.
 
 ``` r
@@ -113,9 +113,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model E(KL-D)   SE
-#> 1 model1    1.19 0.43
-#> 3 model3    2.20 0.46
-#> 2 model2    4.04 0.87
+#> 1 model1    1.40 0.56
+#> 3 model3    2.39 0.57
+#> 2 model2    3.50 0.82
 ```
 
 ## References
