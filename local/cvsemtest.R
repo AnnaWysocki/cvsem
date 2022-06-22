@@ -39,14 +39,13 @@ class( model_list )
 
 
 fit <- cvsem( x =  example_data, Models = model_list, k = 10,
-             discrepancyMetric = "GLS")
+             discrepancyMetric = "kl-d")
 
 fit
 
 fit$discrepancyMetric
 
 fit$model_cv
-fit$model_cv$Model_Warnings
 
 
 x <- example_data

@@ -89,13 +89,14 @@ Define number of folds `k` and call `cvsem` function. Here we use `k=10`
 folds. CV is based on the discrepancy between test sample covariance
 matrix and the model implied matrix from the training data. The
 discrepancy among sample and implied matrix is defined in
-`discrepancyMetric`. Here we use `KL-Divergence`.
+`discrepancyMetric`. Currently two discrepancy metrics are available:
+Here we use `KL-Divergence`.
 
 ``` r
 fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
-#> [1] "Cross-Validating model: 1"
-#> [1] "Cross-Validating model: 2"
-#> [1] "Cross-Validating model: 3"
+#> [1] "Cross-Validating model: model1"
+#> [1] "Cross-Validating model: model2"
+#> [1] "Cross-Validating model: model3"
 ```
 
 ## Show Results
@@ -111,9 +112,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model E(KL-D)   SE
-#> 1 model1    1.27 0.31
-#> 3 model3    2.24 0.47
-#> 2 model2    3.54 0.69
+#> 1 model1    1.28 0.46
+#> 3 model3    2.06 0.57
+#> 2 model2    3.15 0.66
 ```
 
 ## References

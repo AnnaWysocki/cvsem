@@ -19,7 +19,7 @@ cvsem(
 
 \item{Models}{A collection of models, specified in lavaan syntax. Provide Models with the \code{cvgather()} function.}
 
-\item{discrepancyMetric}{Specify which discrepancy metric to use. Default is KL Divergence. Other option is the Maximum Wishart Likelihood (MWL)}
+\item{discrepancyMetric}{Specify which discrepancy metric to use (one of 'KL-Divergence', 'GLS'). Default is KL Divergence.}
 
 \item{k}{The number of folds. Default is 5.}
 
@@ -35,6 +35,9 @@ A list with the prediction error for each model.
 \description{
 Do model comparison on SEM models using cross-validation as described
 in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
+Cross-validation is based on the discrepancy between the sample covariance matrix and
+the model implied matrix. Currently, \code{cvsem} supports 'KL-Divergence' and Genralized Least Squares 'GLS' as
+discrepancy metrics.
 }
 \examples{
 
