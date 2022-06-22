@@ -16,13 +16,13 @@
 #' Do model comparison on SEM models using cross-validation as described
 #' in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
 #' Cross-validation is based on the discrepancy between the sample covariance matrix and
-#' the model implied matrix. Currently, `cvsem` supports 'KL-Divergence' and Genralized Least Squares 'GLS' as
-#' discrepancy metrics.
+#' the model implied matrix. Currently, `cvsem` supports 'KL-Divergence', Frobenius Distance
+#' and Genralized Least Squares 'GLS' as discrepancy metrics. 
 #'
 #' @title Cross-Validation of Structural Equation Models
 #' @param x Data
 #' @param Models A collection of models, specified in lavaan syntax. Provide Models with the `cvgather()` function.
-#' @param discrepancyMetric Specify which discrepancy metric to use (one of 'KL-Divergence', 'GLS'). Default is KL Divergence. 
+#' @param discrepancyMetric Specify which discrepancy metric to use (one of 'KL-Divergence', 'FD', 'GLS'). Default is KL Divergence. 
 #' @param k The number of folds. Default is 5.
 #' @param lavaanFunction Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
 #' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress.
@@ -62,7 +62,7 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
   stopifnot("`k` must be numeric " = is.numeric(k))
 
   match.arg(arg = tolower(lavaanFunction), choices = c("sem", "lavaan", "cfa"))
-  match.arg(arg = tolower(discrepancyMetric), choices = c("kl-divergence", "kl-d", "mwl", "gls"))
+  match.arg(arg = tolower(discrepancyMetric), choices = c("kl-divergence", "kl-d", "kl", "mwl", "gls", "fd"))
 
   if (!class(Models) == "cvgather") stop("Use `cvgather` to collect the models for the `Models` argument.")
 
@@ -205,6 +205,7 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
 
         if( tolower(discrepancyMetric) == "kl-divergence" |
             tolower(discrepancyMetric) == "mwl" |
+            tolower(discrepancyMetric) == "kl" |
             tolower(discrepancyMetric) == "kl-d"){
 
           distance <- KL_divergence(test_S, implied_sigma)
@@ -212,6 +213,10 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
         } else if ( tolower(discrepancyMetric) == "gls") {
 
           distance <- gls(implied_sigma , test_S)
+
+        } else if ( tolower(discrepancyMetric) == "fd") {
+
+          distance <- fd(implied_sigma , test_S)
 
         }
 

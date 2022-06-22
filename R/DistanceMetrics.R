@@ -29,3 +29,16 @@ gls <- function(implied_sigma, test_S) {
   return( gls )
 }
 
+##' Frobenius Distance as described in \insertCite{Biscay1997}{cvsem} or \insertCite{Amendola2015}{cvsem}.
+##' @title Frobenius Matrix Discrepancy
+##' @param implied_Sigma Model implied covariances matrix from training set
+##' @param test_S Sample covariance matrix from test set 
+##' @return FD discrepancy
+##' @references
+##'    \insertAllCited()
+fd <- function( implied_Sigma, test_S ) {
+ 
+  fd <- sum((implied_Sigma - test_S)^2)
+  
+  return(fd)
+}

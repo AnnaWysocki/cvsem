@@ -14,9 +14,24 @@ colnames(example_data) <- c("id", "sex", "ageyr", "agemo", 'school', "grade",
 
 model1 <- 'comprehension ~ sentenceCompletion + wordMeaning'
 
-out <- lavaan::sem(model1, example_data)
+fit <- lavaan::sem(model1, example_data)
 lavaan::parameterEstimates(out)
 lavaan::summary(out)
+
+implied_sigma <- fit@implied[["cov"]][[1]]
+test_S <- fit@SampleStats@cov[[1]]
+sum((implied_sigma- (2*test_S))^2)
+
+X = matrix(rnorm(4000),ncol=4)
+S <- diag(4)
+H <- cov(X )
+sum((S-H)^2)
+
+sum(diag(t(S-H)%*%(S-H)))
+
+sum(diag(S%*%solve(H )-diag(4)))^2
+
+
 
 model2 <- 'comprehension ~ wordMeaning
             sentenceCompletion ~ 0*wordMeaning
@@ -39,7 +54,7 @@ class( model_list )
 
 
 fit <- cvsem( x =  example_data, Models = model_list, k = 10,
-             discrepancyMetric = "kl-d")
+             discrepancyMetric = "gls")
 
 fit
 
