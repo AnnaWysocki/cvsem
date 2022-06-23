@@ -1,3 +1,5 @@
+options(pillar.subtle = FALSE )
+
 example_data <- lavaan::HolzingerSwineford1939
 
 
@@ -33,3 +35,15 @@ test_that("cvsem returns same nuber of cv models as in cvgather",  {
   expect_true( dim(testobject1$model_cv)[1] == length(model_gather) )
 })
 
+test_that("cvsem accepts fitted models", {
+  fit1 <- lavaan::sem(model1, data = example_data )
+  fit2 <- lavaan::sem(model2, data = example_data )
+  out <- cvsem(example_data,  cvgather(fit1,  fit2 ) )
+  expect_true(nrow(out$model_cv) == 2 )
+})
+
+test_that("cvsem throws error if data is not provided", {
+  fit1 <- lavaan::sem(model1, data = example_data )
+  fit2 <- lavaan::sem(model2, data = example_data )
+  expect_error( cvsem( cvgather(fit1,  fit2 ), "Provide data in `x`" ))
+})

@@ -5,7 +5,7 @@
 \title{Cross-Validation of Structural Equation Models}
 \usage{
 cvsem(
-  x,
+  data = NULL,
   Models,
   discrepancyMetric = "KL-Divergence",
   k = 5,
@@ -15,7 +15,7 @@ cvsem(
 )
 }
 \arguments{
-\item{x}{Data}
+\item{data}{Data}
 
 \item{Models}{A collection of models, specified in lavaan syntax. Provide Models with the \code{cvgather()} function.}
 
@@ -59,7 +59,7 @@ model3 <- 'comprehension ~ wordMeaning + speededAddition'
 
 models <- cvgather(model1, model2, model3)
 
-fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
+fit <- cvsem( data = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 
 }
 \references{

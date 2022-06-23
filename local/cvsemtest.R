@@ -79,3 +79,52 @@ p <-  4
 (sum(diag(solve(test_S) %*% implied_sigma)) - p + log(det(test_S)/det(implied_sigma)) )
 (t(mns)%*%solve(test_S)%*%mns)
 (sum(diag(solve(test_S) %*% implied_sigma)) - p + (t(mns)%*%solve(test_S)%*%mns) + log(det(test_S)/det(implied_sigma)) )
+
+
+
+
+pd <- lavaan::PoliticalDemocracy
+
+model <- '
+   # latent variable definitions
+     ind60 =~ x1 + x2 + x3
+     dem60 =~ y1 + y2 + y3 + y4
+     dem65 =~ y5 + y6 + y7 + y8
+   # regressions
+     dem60 ~ ind60
+     dem65 ~ ind60 + dem60
+   # residual covariances
+     y1 ~~ y5
+     y2 ~~ y4 + y6
+     y3 ~~ y7
+     y4 ~~ y8
+     y6 ~~ y8
+'
+
+model2 <- '
+   # latent variable definitions
+     ind60 =~ x1 + x2 + x3
+     dem60 =~ y1 + y2 + y3 
+     dem65 =~ y5 + y6 + y7 + y8
+   # regressions
+     dem60 ~ ind60
+     dem65 ~ ind60 + dem60
+   # residual covariances
+     y1 ~~ y5
+     y2 ~~ y4 + y6
+     y3 ~~ y7
+     y4 ~~ y8
+     y6 ~~ y8
+'
+
+
+fit <- lavaan::sem(model, data = pd)
+fit2 <- lavaan::sem(model2, data = pd)
+
+
+cvg <- cvgather(fit,  fit2 )
+
+cv <- cvsem(data = pd,
+            Models = cvg,
+            discrepancyMetric = "KL-Divergence")
+cv 

@@ -77,7 +77,8 @@ model3 <- 'comprehension ~ wordMeaning + speededAddition'
 
 ## Model List
 
-Gather models into a named list object with `cvgather`
+Gather models into a named list object with `cvgather`. These could also
+be fitted `lavaan` objects based on the same data.
 
 ``` r
 models <- cvgather(model1, model2, model3)
@@ -94,7 +95,7 @@ discrepancy among sample and implied matrix is defined in
 `FD`. Here we use `KL-Divergence`.
 
 ``` r
-fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
+fit <- cvsem( data = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 #> [1] "Cross-Validating model: model1"
 #> [1] "Cross-Validating model: model2"
 #> [1] "Cross-Validating model: model3"
@@ -113,9 +114,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model E(KL-D)   SE
-#> 1 model1    1.40 0.56
-#> 3 model3    2.39 0.57
-#> 2 model2    3.50 0.82
+#> 1 model1    1.09 0.24
+#> 3 model3    1.95 0.35
+#> 2 model2    3.47 0.81
 ```
 
 ## References

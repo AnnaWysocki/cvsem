@@ -6,8 +6,13 @@
 ##' @author philippe
 ##' @keywords internal
 .lavaan_vars <- function(X, data) {
-  obj <- lavaan::lavaanify(model = X)
-  unique_names <- unique( c( obj$lhs, obj$rhs ) )
+  ## Check what is in the cvgather list; either model specification or a fitted lavaan model
+  if(class(X)[1] == "character" ) {
+    obj <- lavaan::lavaanify(model = X)
+    unique_names <- unique( c( obj$lhs, obj$rhs ) )
+  } else if (class(X)[1] == "lavaan" ) {
+    unique_names <- lavaan::lavNames(X)
+  }
   given_names <- colnames( data )
   unique_names[unique_names %in% given_names]
 }
@@ -20,7 +25,7 @@
 #' and Genralized Least Squares 'GLS' as discrepancy metrics. 
 #'
 #' @title Cross-Validation of Structural Equation Models
-#' @param x Data
+#' @param data Data
 #' @param Models A collection of models, specified in lavaan syntax. Provide Models with the `cvgather()` function.
 #' @param discrepancyMetric Specify which discrepancy metric to use (one of 'KL-Divergence', 'FD', 'GLS'). Default is KL Divergence. 
 #' @param k The number of folds. Default is 5.
@@ -54,12 +59,12 @@
 #'
 #' models <- cvgather(model1, model2, model3)
 #'
-#' fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
+#' fit <- cvsem( data = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 #'
-cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanFunction = "sem",
-                  echo = TRUE, ...){
+cvsem <- function(data = NULL, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanFunction = "sem", echo = TRUE, ...){
 
   stopifnot("`k` must be numeric " = is.numeric(k))
+  if(is.null(data)) stop("Provide data in `data`")
 
   match.arg(arg = tolower(lavaanFunction), choices = c("sem", "lavaan", "cfa"))
   match.arg(arg = tolower(discrepancyMetric), choices = c("kl-divergence", "kl-d", "kl", "mwl", "gls", "fd"))
@@ -78,7 +83,7 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
     ## First: Obtain model with maximal amount of variables - this defines the max(K) that is allowed
     ##
     ## Extract observed variable names for model
-    model_vars <- lapply( Models, FUN = .lavaan_vars, data = x )
+    model_vars <- lapply( Models, FUN = .lavaan_vars, data = data )
 
     ## Find number of unique variables across all models. Since we want to compare
     ## covariance matrices that are the same size, we will augment each of the
@@ -98,11 +103,11 @@ cvsem <- function(x, Models, discrepancyMetric = "KL-Divergence", k = 5, lavaanF
     ## Check user provided k and check against highest possible K. Stop and warn if
     ## K is too large. Round to next lower integer with floor()
     ## Max k is for nrows/(vars + 1)
-    max_k <- floor( nrow(x)/( max_vars_model + 1 ) )
+    max_k <- floor( nrow(data)/( max_vars_model + 1 ) )
 
     if( k > max_k ) stop('\n Covariance matrix cannot be inverted. \n At least one of your test folds has fewer rows than columns of data. \n Decrease k to at least: ', max_k)
 
-    folds <- createFolds(x, k = k)
+    folds <- createFolds(data, k = k)
 
     if(is.null(names(Models)) != TRUE){
 

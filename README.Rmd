@@ -70,7 +70,7 @@ model3 <- 'comprehension ~ wordMeaning + speededAddition'
 ```
 
 ## Model List
-Gather models into a named list object with `cvgather`
+Gather models into a named list object with `cvgather`. These could also be fitted `lavaan` objects based on the same data. 
 ```{r}
 models <- cvgather(model1, model2, model3)
 ```
@@ -81,7 +81,7 @@ Here we use `k=10` folds. CV is based on the discrepancy between test sample cov
 Currently three discrepancy metrics are available: `KL-Divergence`, Generalized Least Squares `GLS`, and Frobenius Distance `FD`.
 Here we use `KL-Divergence`. 
 ```{r}
-fit <- cvsem( x = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
+fit <- cvsem( data = example_data, Models = models, k = 10, discrepancyMetric = "KL-Divergence")
 ```
 
 ## Show Results
