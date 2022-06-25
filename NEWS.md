@@ -1,2 +1,2 @@
-# cvsem 1.0.0
+# cvsem 0.0.0.9000
 Initial CRAN release
