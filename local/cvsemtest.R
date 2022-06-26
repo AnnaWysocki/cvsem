@@ -47,13 +47,11 @@ model4 <- 'comprehension ~ wordMeaning + 0.5*speededAddition'
 
 
 model_list <- cvgather( model1, model4, model2, model3 )
-class( model_list )
-
 
 ## devtools::load_all()
 
 
-fit <- cvsem( x =  example_data, Models = model_list, k = 10,
+fit <- cvsem( data =  example_data, Models = model_list, k = 10,
              discrepancyMetric = "gls")
 
 fit

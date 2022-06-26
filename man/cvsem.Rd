@@ -25,7 +25,7 @@ cvsem(
 
 \item{lavaanFunction}{Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"}
 
-\item{echo}{Provide feeback on progess to user, defaults to \code{TRUE}. Set to \code{FALSE} to supppress.}
+\item{echo}{Provide feedback on progress to user, defaults to \code{TRUE}. Set to \code{FALSE} to suppress.}
 
 \item{...}{Not used}
 }
@@ -37,7 +37,7 @@ Do model comparison on SEM models using cross-validation as described
 in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
 Cross-validation is based on the discrepancy between the sample covariance matrix and
 the model implied matrix. Currently, \code{cvsem} supports 'KL-Divergence', Frobenius Distance
-and Genralized Least Squares 'GLS' as discrepancy metrics.
+and Generalized Least Squares 'GLS' as discrepancy metrics.
 }
 \examples{
 

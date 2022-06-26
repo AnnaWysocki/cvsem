@@ -7,7 +7,7 @@ lavaanWrapper <- function( data, Models ){
   ModelNumber <- length(Models)
 
   for( i in 1: length(ModelNumber) ){
-    if( class(Models[[i]]) !=  "lavaan" ){
+    if( !inherits(Models[[i]],  what = 'lavaan' ) ){
       stop( paste("Model", i, "is not a lavaan object") )
     }
   }

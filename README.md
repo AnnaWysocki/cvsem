@@ -114,9 +114,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model E(KL-D)   SE
-#> 1 model1    1.09 0.24
-#> 3 model3    1.95 0.35
-#> 2 model2    3.47 0.81
+#> 1 model1    1.39 0.33
+#> 3 model3    2.44 0.45
+#> 2 model2    3.20 0.76
 ```
 
 ## References
@@ -163,7 +163,7 @@ Covariance Structures.” *Multivariate Behavioral Research* 18: 147–67.
 
 Rosseel, Yves. 2012. “lavaan: An R Package for Structural Equation
 Modeling.” *Journal of Statistical Software*.
-<http://www.jstatsoft.org/v48/i02/>.
+<https://doi.org/10.18637/jss.v048.i02>.
 
 </div>
 

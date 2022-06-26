@@ -22,7 +22,7 @@
 #' in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
 #' Cross-validation is based on the discrepancy between the sample covariance matrix and
 #' the model implied matrix. Currently, `cvsem` supports 'KL-Divergence', Frobenius Distance
-#' and Genralized Least Squares 'GLS' as discrepancy metrics. 
+#' and Generalized Least Squares 'GLS' as discrepancy metrics. 
 #'
 #' @title Cross-Validation of Structural Equation Models
 #' @param data Data
@@ -30,7 +30,7 @@
 #' @param discrepancyMetric Specify which discrepancy metric to use (one of 'KL-Divergence', 'FD', 'GLS'). Default is KL Divergence. 
 #' @param k The number of folds. Default is 5.
 #' @param lavaanFunction Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
-#' @param echo Provide feeback on progess to user, defaults to `TRUE`. Set to `FALSE` to supppress.
+#' @param echo Provide feedback on progress to user, defaults to `TRUE`. Set to `FALSE` to suppress.
 #' @param ... Not used
 #' @return A list with the prediction error for each model.
 #' @importFrom stats cov
@@ -69,7 +69,7 @@ cvsem <- function(data = NULL, Models, discrepancyMetric = "KL-Divergence", k = 
   match.arg(arg = tolower(lavaanFunction), choices = c("sem", "lavaan", "cfa"))
   match.arg(arg = tolower(discrepancyMetric), choices = c("kl-divergence", "kl-d", "kl", "mwl", "gls", "fd"))
 
-  if (!class(Models) == "cvgather") stop("Use `cvgather` to collect the models for the `Models` argument.")
+  if ( !inherits(Models,  what = 'cvgather' ) ) stop("Use `cvgather` to collect the models for the `Models` argument.")
 
     model_number <- length(Models)
     model_cv <- data.frame(Model = rep(0, model_number),
