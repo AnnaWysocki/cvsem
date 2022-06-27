@@ -114,9 +114,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model E(KL-D)   SE
-#> 1 model1    1.39 0.33
-#> 3 model3    2.44 0.45
-#> 2 model2    3.20 0.76
+#> 1 model1    1.29 0.44
+#> 3 model3    2.28 0.50
+#> 2 model2    3.48 0.64
 ```
 
 ## References
@@ -147,7 +147,6 @@ fit
 
 Browne, Michael W., and Robert Cudeck. 1992. “Alternative Ways of
 Assessing Model Fit.” *Sociological Methods & Research* 21: 230–58.
-<https://doi.org/10.1177/0049124192021002005>.
 
 </div>
 
