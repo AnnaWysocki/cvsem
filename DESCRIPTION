@@ -2,11 +2,12 @@ Package: cvsem
 Title: SEM Model Comparison with K-Fold Cross-Validation
 Version: 1.0.0
 Authors@R: 
-    c(person("Anna", "Wysocki", , "awysocki@ucdavis.edu", role = c("aut")),
+    c(person("Anna", "Wysocki", , "awysocki@ucdavis.edu", role = c("aut","cre")),
     person("Danielle", "Siegel", , "dpsiegel@ucdavis.edu", role = c("aut")),
     person("Cameron", "allen", , "camallen@ucdavis.edu", role = c("aut")),
-    person("Philippe", "Rast", , "rast.ph@gmail.com", role = c("aut","cre")))
-Description: Functions that allow for comparing SEM models using cross-validation.
+    person("Philippe", "Rast", , "rast.ph@gmail.com", role = c("aut")))
+Description: Functions that allow for comparing Structural Eauation Models (SEM) using cross-validation. Users can specify multiple SEMs using lavaan syntax (Yves, 2012). cvsem computes the KL Divergence between 1) the model implied covariance matrix estimated from the training data and 2) the sample covariance matrix estimated from the test data (Cudeck, Robert & Browne, 1983). The KL Divergence is computed for each of the specified SEMs allowing for the models to be compared based on their prediction errors. 
+
 License: GPL (>=3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
