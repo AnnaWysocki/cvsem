@@ -6,7 +6,16 @@
 ## R CMD check results
 
 ### Version 1.0.0
-0 errors ✔ | 0 warnings ✔ | 0 notes ✔
+0 errors ✔ | 0 warnings ✔ | 1 notes ✖
+
+* Possibly misspelled words in DESCRIPTION ... NOTE
+  Cudeck (9:350)
+  SEM (2:8, 9:77)
+  SEMs (9:133, 9:466)
+  cvsem (9:159)
+  lavaan (9:144)
+  
+  - The above list of words are either author names, acronyms (that have been explained), or package names. None are mispelled. 
 
 
 ## Comments from CRAN admins:
