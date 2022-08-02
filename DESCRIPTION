@@ -6,7 +6,7 @@ Authors@R:
     person("Danielle", "Siegel", , "dpsiegel@ucdavis.edu", role = c("aut")),
     person("Cameron", "allen", , "camallen@ucdavis.edu", role = c("aut")),
     person("Philippe", "Rast", , "rast.ph@gmail.com", role = c("aut")))
-Description: Functions that allow for comparing Structural Eauation Models (SEM) using cross-validation. Users can specify multiple SEMs using lavaan syntax. cvsem computes the KL Divergence between 1) the model implied covariance matrix estimated from the training data and 2) the sample covariance matrix estimated from the test data described in Cudeck, Robert & Browne (1983) <doi:10.18637/jss.v048.i02>. The KL Divergence is computed for each of the specified SEMs allowing for the models to be compared based on their prediction errors. 
+Description: Functions that allow for comparing Structural Equation Models (SEM) using cross-validation. Users can specify multiple SEMs using lavaan syntax. cvsem computes the KL Divergence between 1) the model implied covariance matrix estimated from the training data and 2) the sample covariance matrix estimated from the test data described in Cudeck, Robert & Browne (1983) <doi:10.18637/jss.v048.i02>. The KL Divergence is computed for each of the specified SEMs allowing for the models to be compared based on their prediction errors. 
 License: GPL (>=3)
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
