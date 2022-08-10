@@ -21,15 +21,15 @@
 #' Do model comparison on SEM models using cross-validation as described
 #' in \insertCite{Cudeck1983}{cvsem} and  \insertCite{BrowneCudeck1992}{cvsem}.
 #' Cross-validation is based on the discrepancy between the sample covariance matrix and
-#' the model implied matrix. Currently, `cvsem` supports 'KL-Divergence', Frobenius Distance
-#' and Generalized Least Squares 'GLS' as discrepancy metrics. 
+#' the model implied matrix. Currently, `cvsem` supports 'Kullback Liebler Divergence', Frobenius Distance
+#' and Generalized Least Squares 'GLS' as discrepancy metrics.
 #'
 #' @title Cross-Validation of Structural Equation Models
 #' @param data Data
 #' @param Models A collection of models, specified in lavaan syntax. Provide Models with the `cvgather()` function.
-#' @param discrepancyMetric Specify which discrepancy metric to use (one of 'KL-Divergence', 'FD', 'GLS'). Default is KL Divergence. 
+#' @param discrepancyMetric Specify which discrepancy metric to use (one of 'KL-Divergence', 'FD', 'GLS'). Default is KL Divergence.
 #' @param k The number of folds. Default is 5.
-#' @param lavaanFunction Specify which lavaan function to use. Default is "sem". Other options are "lavaan" and "cfa"
+#' @param lavaanFunction Specify which `lavaan` function to use. Default is "sem". Other options are "lavaan" and "cfa"
 #' @param echo Provide feedback on progress to user, defaults to `TRUE`. Set to `FALSE` to suppress.
 #' @param ... Not used
 #' @return A list with the prediction error for each model.
