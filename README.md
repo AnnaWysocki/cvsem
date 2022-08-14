@@ -5,6 +5,7 @@
 
 <!-- badges: start -->
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/cvsem)](https://cran.r-project.org/package=cvsem)
 [![R-CMD-check](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
 <!-- badges: end -->
 
@@ -27,6 +28,12 @@ Currently, the provided model code needs to follow one of **lavaan**’s
 allowed specifications.
 
 ## Installation
+
+**cvsem** is available on CRAN and can be installed with
+
+``` r
+install.packages('cvsem')
+```
 
 You can install the development version of **cvsem** from
 [GitHub](https://github.com/) with:
@@ -114,9 +121,9 @@ fit
 #> based on  k =  10 folds. 
 #> 
 #>    Model E(KL-D)   SE
-#> 1 model1    1.29 0.44
-#> 3 model3    2.28 0.50
-#> 2 model2    3.48 0.64
+#> 1 model1    1.21 0.54
+#> 3 model3    2.16 0.59
+#> 2 model2    3.46 0.85
 ```
 
 ## References

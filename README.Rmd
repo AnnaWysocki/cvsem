@@ -18,14 +18,22 @@ knitr::opts_chunk$set(
 # cvsem
 
 <!-- badges: start -->
+[![CRAN_Status_Badge](http://www.r-pkg.org/badges/version/cvsem)](https://cran.r-project.org/package=cvsem)
 [![R-CMD-check](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml/badge.svg)](https://github.com/AnnaWysocki/cvsem/actions/workflows/r.yml)
 <!-- badges: end -->
+
 
 The **cvsem** package provides cross-validation (CV) of structural equation models (SEM) across a user-defined number of folds. CV is based on computing the discrepancy among the held-out test sample covariance and the model implied covariance from the training samples. This approach of cross-validating SEM's is described in @Cudeck1983 and @BrowneCudeck1992. The individual models are fitted via the **lavaan** package [@Rosseel2012lavaan] to obtain the model implied covariance matrix. The discrepancy of the implied matrix to the test sample covariance matrix is obtained via a pre-specified metric (defaults to Kullback-Leibler divergence aka. Maximum Likelihood discrepancy). The `cvsem` function returns the average discrepancy together with a corresponding standard error for each tested model.
 
 Currently, the provided model code needs to follow one of **lavaan**'s allowed specifications. 
 
 ## Installation
+
+**cvsem** is available on CRAN and can be installed with 
+
+``` r
+install.packages('cvsem')
+```
 
 You can install the development version of **cvsem** from [GitHub](https://github.com/) with:
 
